@@ -26,4 +26,4 @@ Sep 2020 - now
   - S3 bucket
 
 ## Contributing
-All developers should feel welcom and encouraged to contribute to Farmily, see out [CONTROBUTING](https://github.com/emo8355/ElephantGarlic-Farmily/blob/main/CONTRIBUTING.md) document to get involed.
+All developers should feel welcom and encouraged to contribute to Farmily, see out [CONTROBUTING](https://github.com/emo8355/ElephantGarlic-Farmily/blob/master/CONTRIBUTING.md) document to get involed.
