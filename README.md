@@ -11,19 +11,12 @@ Sep 2020 - now
 ## tech stack
 
 - #### Front-End
-  - EJS / React JS
-  - CSS / SCSS / SASS
-  - Bootstrap
-  - Vanilla JS
+  - React Native
 - #### Back-End server
   - Node JS 
-  - Express JS
   - Google Oauth <span style="color: red">(Not decidecd yet)</span>
-  - PassportJS + JSON WEB TOKEN
 - #### Database: 
-  - Mongo / noSQL database
-- #### Image Hosting:
-  - S3 bucket
+  - Firebase
 
 ## Contributing
 All developers should feel welcom and encouraged to contribute to Farmily, see out [CONTROBUTING](https://github.com/emo8355/ElephantGarlic-Farmily/blob/master/CONTRIBUTING.md) document to get involed.
