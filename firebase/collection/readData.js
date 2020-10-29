@@ -1,13 +1,45 @@
-import { firebase, db } from "../firebase";
+import { firebase, db, auth } from "../firebase";
 
 const allUser = db.collection("users");
-const userGetter = allUser.get();
 
-const getAllUser = () => {
-	let allUser = [];
-	userGetter.then((user) => {
-		user.forEach((x) => console.log(x.Df.sn.proto.mapValue.fields));
-	});
+const login = (email, password) => {
+	return firebase
+		.auth()
+		.signInWithEmailAndPassword(email, password)
+		.then(async (response) => {
+			const uid = response.user.uid;
+			const user = await getUseWithUID(uid);
+			return user;
+		})
+		.catch((error) => {
+			throw error.message;
+		});
 };
 
-export { getAllUser };
+async function getUseWithUID(uid) {
+	return allUser
+		.where("id", "==", uid)
+		.get()
+		.then((data) => {
+			let user;
+			data.forEach((doc) => {
+				user = { ...doc.data() };
+			});
+			if (!user) {
+				throw "No user";
+			}
+			return user;
+		});
+}
+
+async function getCurrentUser() {
+	try {
+		const userId = auth.currentUser.uid;
+		const user = await getUseWithUID(userId);
+		return user;
+	} catch (err) {
+		throw err.message;
+	}
+}
+
+export { getUseWithUID, login, getCurrentUser };

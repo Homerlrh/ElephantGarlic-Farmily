@@ -3,16 +3,12 @@ import {
 	Image,
 	Text,
 	TextInput,
-	TouchableOpacity,
-	View,
 	Alert,
 	Button,
-	SafeAreaView,
-	StyleSheet,
 	KeyboardAvoidingView,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { firebase, db } from "../firebase/firebase";
+import { registerNewUser } from "../firebase/collection/writeData";
+import { styles } from "./styles";
 
 export default function Register({ navigation }) {
 	const [email, setEmail] = useState("");
@@ -28,36 +24,18 @@ export default function Register({ navigation }) {
 		console.log(`email: ${email} pass: ${password}`);
 	};
 
-	const signUP = () => {
-		if (password !== confirmPassword) {
-			Alert.alert("Passwords don't match.");
-			return;
+	const signUP = async () => {
+		const data = {
+			email,
+			firstName,
+		};
+		let user;
+		try {
+			user = await registerNewUser(email, password, confirmPassword, data);
+			console.log(user);
+		} catch (err) {
+			Alert.alert(err);
 		}
-
-		firebase
-			.auth()
-			.createUserWithEmailAndPassword(email, password)
-			.then((response) => {
-				const uid = response.user.uid;
-				const data = {
-					id: uid,
-					email,
-					firstName,
-				};
-				const usersRef = db.collection("users");
-				usersRef
-					.doc(uid)
-					.set(data)
-					.then(() => {
-						console.log("user created");
-					})
-					.catch((error) => {
-						Alert.alert(error.message);
-					});
-			})
-			.catch((error) => {
-				Alert.alert(error.message);
-			});
 	};
 
 	return (
@@ -65,7 +43,7 @@ export default function Register({ navigation }) {
 			style={styles.container}
 			behavior={Platform.OS == "ios" ? "padding" : "height"}
 		>
-			<Image source={require("../assets/Farmily.png")} />
+			<Image source={require("../assets/Farmily.png")} style={styles.img} />
 			<TextInput
 				style={styles.inputSpace}
 				placeholder="Name"
@@ -109,21 +87,3 @@ export default function Register({ navigation }) {
 		</KeyboardAvoidingView>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	inputSpace: {
-		marginBottom: 15,
-		width: "80%",
-		borderColor: "#000",
-		borderRadius: 5,
-		borderWidth: 1,
-		paddingVertical: 8,
-		paddingLeft: 5,
-	},
-});

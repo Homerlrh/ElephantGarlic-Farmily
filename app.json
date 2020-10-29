@@ -1,26 +1,24 @@
 {
-  "expo": {
-    "name": "Farmily",
-    "slug": "Farmily",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/Farmily.png",
-    "splash": {
-      "image": "./assets/Farmily.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "web": {
-      "favicon": "./assets/Farmily.png"
-    }
-  }
+	"expo": {
+		"name": "Farmily",
+		"slug": "Farmily",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/Farmily.png",
+		"splash": {
+			"image": "./assets/Farmily.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true
+		},
+		"web": {
+			"favicon": "./assets/Farmily.png"
+		}
+	}
 }
