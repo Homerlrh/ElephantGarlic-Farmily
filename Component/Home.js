@@ -7,6 +7,7 @@ import {
 	Button,
 	KeyboardAvoidingView,
 } from "react-native";
+
 import { navigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import ImageInputList from "./createPost/ImageInputList";
@@ -14,6 +15,8 @@ import styles from "./styles";
 
 import { getCurrentUser } from "../firebase/collection/readData";
 import { uploadFile } from "../firebase/storage";
+
+import { db } from "../firebase/firebase";
 
 export default function Home({ navigation }) {
 	const [currentUser, setCurrentUser] = useState({});
@@ -54,10 +57,21 @@ export default function Home({ navigation }) {
 		return Promise.all(imagesURL);
 	};
 
-	const createPost = () => {
-		getAllUploadImage().then((data) => {
-			//do more stuff
-		});
+	const createPost = async () => {
+		const imageList = await getAllUploadImage();
+		const data = {
+			postTitle,
+			postDescription,
+			images: imageList,
+		};
+		db.collection("post")
+			.add(data)
+			.then((doc) => {
+				console.log("ID: ", doc.id);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 
 	const handleAdd = (uri) => {
