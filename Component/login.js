@@ -19,6 +19,10 @@ export default function Login({ navigation }) {
 		navigation.navigate("Registration");
 	};
 
+	const handleForgorPassword = () => {
+		navigation.navigate("Reset");
+	};
+
 	const logIn = async () => {
 		let user;
 		try {
@@ -59,6 +63,8 @@ export default function Login({ navigation }) {
 					logIn();
 				}}
 			/>
+			<Text onPress={handleForgorPassword}>Forgot Password?</Text>
+
 			<Text>
 				Don't have an account?
 				<Text onPress={handleRegistration}>Sign up</Text>

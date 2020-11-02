@@ -19,7 +19,7 @@ async function registerNewUser(email, password, confirmPassword, data) {
 		.createUserWithEmailAndPassword(email, password)
 		.then((response) => {
 			const uid = response.user.uid;
-			const currentTime = firebase.database.ServerValue.TIMESTAMP;
+			const currentTime = firebase.firestore.FieldValue.serverTimestamp();
 			data.createdTime = currentTime;
 			data.id = uid;
 			db.collection("users")

@@ -13,6 +13,7 @@ import ImageInputList from "./createPost/ImageInputList";
 import styles from "./styles";
 
 import { getCurrentUser } from "../firebase/collection/readData";
+import { uploadFile } from "../firebase/storage";
 
 export default function Home({ navigation }) {
 	const [currentUser, setCurrentUser] = useState({});
@@ -44,11 +45,19 @@ export default function Home({ navigation }) {
 		requestPermission();
 	}, []);
 
-	const createPost = () => {
-		console.log(`title ${postTitle} description ${postDescription}`);
+	const getAllUploadImage = async () => {
+		let imagesURL = [...imageUris].map(async (imageUri) => {
+			return uploadFile(imageUri).then(async (data) => {
+				return data;
+			});
+		});
+		return Promise.all(imagesURL);
+	};
 
-		// const data = { title: postTitle, description: postDescription };
-		// db.collection("post").doc(postTitle).set(data);
+	const createPost = () => {
+		getAllUploadImage().then((data) => {
+			//do more stuff
+		});
 	};
 
 	const handleAdd = (uri) => {
@@ -78,7 +87,7 @@ export default function Home({ navigation }) {
 				onChangeText={(text) => setPostDescription(text)}
 				value={postDescription}
 			/>
-			<Button title="See user" onPress={createPost} />
+			<Button title="Upload Photo" onPress={createPost} />
 			<ImageInputList
 				imageUris={imageUris}
 				onAddImage={handleAdd}

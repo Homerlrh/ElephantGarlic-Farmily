@@ -8,31 +8,31 @@ import {
 	KeyboardAvoidingView,
 } from "react-native";
 import { registerNewUser } from "../firebase/collection/writeData";
-import { styles } from "./styles";
+import styles from "./styles";
 
 export default function Register({ navigation }) {
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [userName, setUserName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	const [firstName, setFirstName] = useState("");
 
 	const handleLogin = () => {
 		navigation.navigate("Login");
 	};
 
-	const user = () => {
-		console.log(`email: ${email} pass: ${password}`);
-	};
-
 	const signUP = async () => {
 		const data = {
-			email,
 			firstName,
+			lastName,
+			userName,
+			email,
 		};
-		let user;
+
 		try {
-			user = await registerNewUser(email, password, confirmPassword, data);
-			console.log(user);
+			await registerNewUser(email, password, confirmPassword, data);
+			navigation.navigate("Home");
 		} catch (err) {
 			Alert.alert(err);
 		}
@@ -46,9 +46,23 @@ export default function Register({ navigation }) {
 			<Image source={require("../assets/Farmily.png")} style={styles.img} />
 			<TextInput
 				style={styles.inputSpace}
-				placeholder="Name"
+				placeholder="ex: John"
 				onChangeText={(text) => setFirstName(text)}
 				value={firstName}
+			/>
+
+			<TextInput
+				style={styles.inputSpace}
+				placeholder="ex: Doe"
+				onChangeText={(text) => setLastName(text)}
+				value={lastName}
+			/>
+
+			<TextInput
+				style={styles.inputSpace}
+				placeholder="Username"
+				onChangeText={(text) => setUserName(text)}
+				value={userName}
 			/>
 
 			<TextInput
