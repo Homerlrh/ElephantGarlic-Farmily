@@ -1,36 +1,17 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { StyleSheet, Text, SafeAreaView, Button, Alert } from "react-native";
-import { getAllUser } from "./firebase/collection/readData";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { AuthNavigator, AppNavigator, AuthContext } from "./Component";
 
-import { Register, Login, Home, Reset } from "./Component";
-import { useScreens } from "react-native-screens";
-
-const Stack = createStackNavigator();
 export default function App() {
-	const [loading, setLoading] = useState(true);
-	const [user, setUser] = useState(null);
+	const [user, setUser] = useState();
 
 	return (
-		<NavigationContainer>
-			<Stack.Navigator>
-				<>
-					<Stack.Screen name="Login" component={Login} />
-					<Stack.Screen name="Registration" component={Register} />
-					<Stack.Screen name="Reset" component={Reset} />
-					<Stack.Screen
-						name="Home"
-						component={Home}
-						options={{
-							title: "My home",
-							headerLeft: null,
-						}}
-					/>
-				</>
-			</Stack.Navigator>
-		</NavigationContainer>
+		<AuthContext.Provider value={{ user, setUser }}>
+			<NavigationContainer>
+				{user ? <AppNavigator /> : <AuthNavigator />}
+			</NavigationContainer>
+		</AuthContext.Provider>
 	);
 }

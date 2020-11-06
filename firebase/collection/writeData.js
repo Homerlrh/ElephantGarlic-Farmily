@@ -1,14 +1,8 @@
-import { firebase, db } from "../firebase";
+import { firebase, db, functions } from "../firebase";
 import { getUseWithUID } from "./readData";
-
-const User = db.collection("users");
-const Post = db.collection("post");
-
-const reateUset = (data, cb) => {
-	const date = currentTime.now();
-	data.createdTime = date;
-	User.add(data).then(cb);
-};
+import { uploadFile } from "../storage";
+const Users = db.collection("users");
+const Posts = db.collection("posts");
 
 async function registerNewUser(email, password, confirmPassword, data) {
 	if (password !== confirmPassword) {
@@ -22,8 +16,7 @@ async function registerNewUser(email, password, confirmPassword, data) {
 			const currentTime = firebase.firestore.FieldValue.serverTimestamp();
 			data.createdTime = currentTime;
 			data.id = uid;
-			db.collection("users")
-				.doc(uid)
+			Users.doc(uid)
 				.set(data)
 				.then(async () => {
 					const user = await getUseWithUID(uid);
@@ -38,4 +31,41 @@ async function registerNewUser(email, password, confirmPassword, data) {
 		});
 }
 
-export { registerNewUser };
+async function uploadFiles(imageArray) {
+	let imagesURL = [...imageArray].map(async (imageUri) => {
+		return uploadFile(imageUri).then(async (data) => {
+			return data;
+		});
+	});
+	return Promise.all(imagesURL);
+}
+
+async function createPost(data) {
+	const currentTime = firebase.firestore.FieldValue.serverTimestamp();
+	data.createdTime = currentTime;
+	return Posts.add(data)
+		.then((doc) => {
+			Posts.doc(doc.id).update({
+				postId: doc.id,
+			});
+
+			return doc.id;
+		})
+		.catch((error) => {
+			throw error.message;
+		});
+}
+
+async function commentPost(postId, data) {
+	const currentTime = firebase.firestore.FieldValue.serverTimestamp();
+	data.createdTime = currentTime;
+	return Posts.doc(postId)
+		.collection("comment")
+		.add(data)
+		.then(() => {})
+		.catch((error) => {
+			throw error.message;
+		});
+}
+
+export { registerNewUser, createPost, uploadFiles, commentPost };

@@ -1,4 +1,5 @@
 import * as firebase from "firebase";
+import "firebase/functions";
 const config = {
 	apiKey: "AIzaSyCZGVKSrrvi7v2z2PaVLN84dILJ2eHQJeg",
 	authDomain: "farmily-1f4f1.firebaseapp.com",
@@ -16,4 +17,5 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
-export { firebase, db, auth, storage };
+const functions = firebase.functions();
+export { firebase, db, auth, storage, functions };

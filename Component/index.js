@@ -1,5 +1,16 @@
-export { default as Register } from "./Register";
-export { default as Login } from "./login";
-export { default as Home } from "./Home";
-export { default as Reset } from "./ForgetPassword";
-export { default as PasswordReset } from "./ResetPassword";
+//screen
+export { default as Register } from "./screen/Register";
+export { default as Login } from "./screen/login";
+export { default as CreatePost } from "./screen/CreatePost";
+export { default as Reset } from "./screen/ForgetPassword";
+export { default as PasswordReset } from "./screen/ResetPassword";
+export { default as Home } from "./screen/Home";
+export { default as DetailPost } from "./screen/DetailPost";
+export { default as AllPost } from "./screen/AllPost";
+export { default as Front } from "./AuthNavigation/Welcome";
+
+//auth
+export { default as AuthContext } from "./Auth/context";
+//navigator
+export { default as AuthNavigator } from "./AuthNavigation/AuthNavigator";
+export { default as AppNavigator } from "./AuthNavigation/AppNavigatior";

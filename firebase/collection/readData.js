@@ -1,5 +1,6 @@
 import { firebase, db, auth } from "../firebase";
-const allUser = db.collection("users");
+const Users = db.collection("users");
+const Posts = db.collection("posts");
 
 const login = (email, password) => {
 	return firebase
@@ -15,9 +16,19 @@ const login = (email, password) => {
 		});
 };
 
+const logout = () => {
+	return auth
+		.signOut()
+		.then(function () {
+			return true;
+		})
+		.catch(function (error) {
+			throw error.message;
+		});
+};
+
 async function getUseWithUID(uid) {
-	return allUser
-		.where("id", "==", uid)
+	return Users.where("id", "==", uid)
 		.get()
 		.then((data) => {
 			let user;
@@ -32,8 +43,7 @@ async function getUseWithUID(uid) {
 }
 
 async function getUserWithEmail(email) {
-	return allUser
-		.where("email", "==", email)
+	return Users.where("email", "==", email)
 		.get()
 		.then((data) => {
 			let user;
@@ -48,8 +58,7 @@ async function getUserWithEmail(email) {
 }
 
 async function getUserWithUsername(username) {
-	return allUser
-		.where("userName", "==", username)
+	return Users.where("userName", "==", username)
 		.get()
 		.then((data) => {
 			let user;
@@ -73,10 +82,31 @@ async function getCurrentUser() {
 	}
 }
 
+async function getAllPost() {
+	const snapshot = await db.collection("posts").orderBy("createdTime").get();
+	let array = [];
+	snapshot.forEach(async (x) => {
+		array = [...array, x.data()];
+	});
+	return array.reverse();
+}
+
+async function getPostById(id) {
+	const snapshot = await Posts.where("postId", "==", id).get();
+	let array = [];
+	snapshot.forEach(async (x) => {
+		array = [...array, x.data()];
+	});
+	return array[0];
+}
+
 export {
 	getUseWithUID,
 	getUserWithEmail,
 	getUserWithUsername,
 	login,
+	logout,
 	getCurrentUser,
+	getAllPost,
+	getPostById,
 };
