@@ -30,8 +30,6 @@ export default function Login({ navigation }) {
 		try {
 			user = await login(email, password);
 			authContext.setUser(user);
-			//navigation.navigate("Home");
-			//go to homescreen with user data
 		} catch (err) {
 			Alert.alert(err);
 		}

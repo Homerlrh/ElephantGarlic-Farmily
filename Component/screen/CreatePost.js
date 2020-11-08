@@ -92,7 +92,7 @@ export default function CreatePost({ navigation }) {
 				onRemoveImage={handleRemove}
 			/>
 
-			<Button title="Upload Photo" onPress={handlecreatePost} />
+			<Button title="Upload Post" onPress={handlecreatePost} />
 		</KeyboardAvoidingView>
 	);
 }

@@ -7,7 +7,10 @@ import {
 	Button,
 	Alert,
 } from "react-native";
-import { getPostById } from "../../firebase/collection/readData";
+import {
+	getPostById,
+	getAllCommentByPost,
+} from "../../firebase/collection/readData";
 import { commentPost } from "../../firebase/collection/writeData";
 import { AuthContext } from "../index";
 
@@ -26,7 +29,9 @@ export default function DetailPost({ route, navigation }) {
 
 		(async () => {
 			const currentPost = await getPostById(postId);
+			const postComment = await getAllCommentByPost(postId);
 			setPost(currentPost);
+			setComments(postComment);
 			setReady(true);
 		})();
 	}, [setPost]);
@@ -39,10 +44,17 @@ export default function DetailPost({ route, navigation }) {
 		try {
 			commentPost(post.postId, data);
 			setComments([...comments, data]);
+			setComment("");
 		} catch (err) {
 			Alert.alert(err);
 		}
 	};
+
+	const c = comments.map((comment) => (
+		<Text>
+			{comment.createdBy.userName}:{comment.comment}
+		</Text>
+	));
 
 	return isReady === false ? (
 		<View style={styles.container}>
@@ -53,6 +65,11 @@ export default function DetailPost({ route, navigation }) {
 		<View>
 			<Text>Title: {post.postTitle}</Text>
 			<Text>Description: {post.postDescription}</Text>
+
+			<View>
+				<Text>Comments</Text>
+				{c}
+			</View>
 			<View>
 				<TextInput
 					multiline
