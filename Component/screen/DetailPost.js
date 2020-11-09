@@ -42,7 +42,7 @@ export default function DetailPost({ route, navigation }) {
 			comment,
 		};
 		try {
-			commentPost(post.postId, data);
+			commentPost(post.postId, comment);
 			setComments([...comments, data]);
 			setComment("");
 		} catch (err) {
@@ -51,8 +51,8 @@ export default function DetailPost({ route, navigation }) {
 	};
 
 	const c = comments.map((comment) => (
-		<Text>
-			{comment.createdBy.userName}:{comment.comment}
+		<Text key={comment.createdBy}>
+			{comment.createdBy}: {comment.comment}
 		</Text>
 	));
 
@@ -63,8 +63,8 @@ export default function DetailPost({ route, navigation }) {
 		</View>
 	) : (
 		<View>
-			<Text>Title: {post.postTitle}</Text>
-			<Text>Description: {post.postDescription}</Text>
+			<Text>Title: {post.title}</Text>
+			<Text>Description: {post.description}</Text>
 
 			<View>
 				<Text>Comments</Text>

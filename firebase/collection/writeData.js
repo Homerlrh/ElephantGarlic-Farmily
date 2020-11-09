@@ -4,7 +4,7 @@ import { uploadFile } from "../storage";
 const Users = db.collection("users");
 const Posts = db.collection("posts");
 const Chats = db.collection("chats");
-
+const SlaughterHouses = db.collection("slaughterhouses");
 async function registerNewUser(email, password, confirmPassword, data) {
 	if (password !== confirmPassword) {
 		throw "Passwords don't match.";
@@ -42,9 +42,16 @@ async function uploadFiles(imageArray) {
 	return Promise.all(imagesURL);
 }
 
-async function createPost(data) {
-	const currentTime = firebase.firestore.FieldValue.serverTimestamp();
-	data.createdTime = currentTime;
+async function createPost(title, description, postType, images) {
+	const current = await getCurrentUser();
+	const data = {
+		createdBy: { name: current.userName, id: current.id },
+		title,
+		description,
+		postType,
+		images,
+		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+	};
 	return Posts.add(data)
 		.then((doc) => {
 			Posts.doc(doc.id).update({
@@ -57,9 +64,14 @@ async function createPost(data) {
 		});
 }
 
-async function commentPost(postId, data) {
-	const currentTime = firebase.firestore.FieldValue.serverTimestamp();
-	data.createdTime = currentTime;
+async function commentPost(postId, comment) {
+	const current = await getCurrentUser();
+	const data = {
+		createdBy: current.userName,
+		comment,
+		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+	};
+
 	return Posts.doc(postId)
 		.collection("comment")
 		.add(data)
@@ -69,7 +81,7 @@ async function commentPost(postId, data) {
 		});
 }
 
-const createChatRoom = async () => {
+const createChatRoom = async (sendUser) => {
 	const current = await getCurrentUser();
 	const userGroup = {
 		user1: current.id,
@@ -98,6 +110,41 @@ const insertChat = async (room, message) => {
 	Chats.doc(room).collection("message").add(data);
 };
 
+const createSlaughterHouse = (name, address) => {
+	const data = {
+		name,
+		rating: 0,
+		like: 0,
+		address,
+		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+	};
+	return SlaughterHouses.add(data).then((doc) => {
+		SlaughterHouses.doc(doc.id).update({
+			businessId: doc.id,
+		});
+		return doc.id;
+	});
+};
+
+const createBooking = async (businessName, date, time, businessId) => {
+	const current = await getCurrentUser();
+	const data = {
+		businessName,
+		customer: `${current.firstName} ${current.lastName}`,
+		date,
+		time,
+		isDone: false,
+		isCancel: false,
+		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+	};
+	SlaughterHouses.doc(businessId)
+		.collection("booking")
+		.add(data)
+		.then(() => {
+			Users.doc(current.id).collection("booking").add(data);
+		});
+};
+
 export {
 	registerNewUser,
 	createPost,
@@ -105,4 +152,6 @@ export {
 	commentPost,
 	createChatRoom,
 	insertChat,
+	createSlaughterHouse,
+	createBooking,
 };

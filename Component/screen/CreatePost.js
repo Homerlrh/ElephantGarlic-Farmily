@@ -44,14 +44,12 @@ export default function CreatePost({ navigation }) {
 			if (imageUris) {
 				imageList = await uploadFiles(imageUris);
 			}
-			const data = {
-				createdBy: { name: currentUser.userName, id: currentUser.id },
+			const id = await createPost(
 				postTitle,
 				postDescription,
-				postType: "disscussion",
-				images: imageList,
-			};
-			const id = await createPost(data);
+				"disscussion",
+				imageList
+			);
 			setTimeout(() => {
 				navigation.navigate("DetailPost", { postId: id });
 			}, 3000);

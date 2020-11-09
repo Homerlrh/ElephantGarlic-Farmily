@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { chat } from "../../firebase/collection/readData";
+import { db, firebase } from "../../firebase/firebase";
+import { getCurrentUser } from "../../firebase/collection/readData";
 import styles from "../styles";
 export default function ChatScreen({ navigation }) {
 	const [isReady, setReady] = useState(false);
@@ -9,6 +11,12 @@ export default function ChatScreen({ navigation }) {
 		setReady(false);
 		(async () => {
 			const chats = await chat();
+			// await createBooking(
+			// 	"house 1",
+			// 	"2020/12/25",
+			// 	"9:00AM ~ 10:00AM",
+			// 	"iVDgqZRsfV81dCx31HEu"
+			// );
 			setChats(chats);
 			setReady(true);
 		})();

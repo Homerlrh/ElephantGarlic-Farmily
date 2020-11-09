@@ -102,7 +102,7 @@ async function getCurrentUser() {
 async function getAllPost() {
 	const snapshot = await db
 		.collection("posts")
-		.orderBy("createdTime", "desc")
+		.orderBy("createdAt", "desc")
 		.get();
 	let array = [];
 	snapshot.forEach(async (x) => {
@@ -123,7 +123,7 @@ async function getPostById(id) {
 async function getAllCommentByPost(id) {
 	const snapshot = await Posts.doc(id)
 		.collection("comment")
-		.orderBy("createdTime", "desc")
+		.orderBy("createdAt", "desc")
 		.get();
 	let array = [];
 	snapshot.forEach(async (x) => {

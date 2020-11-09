@@ -54,9 +54,9 @@ export default function AllPost({ navigation }) {
 					/> */}
 				</View>
 				<View style={styles.textbox}>
-					<Text style={styles.font}>Title: {post.postTitle}</Text>
+					<Text style={styles.font}>Title: {post.title}</Text>
 					<Text style={styles.font}>
-						Date: {new Date(post.createdTime.toDate()).toDateString()}
+						Date: {new Date(post.createdAt.toDate()).toDateString()}
 					</Text>
 				</View>
 			</TouchableOpacity>
