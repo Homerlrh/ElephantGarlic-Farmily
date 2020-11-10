@@ -1,10 +1,20 @@
-import { firebase, db, functions } from "../firebase";
+import { firebase, db } from "../firebase";
 import { getCurrentUser, getUseWithUID } from "./readData";
 import { uploadFile } from "../storage";
 const Users = db.collection("users");
 const Posts = db.collection("posts");
 const Chats = db.collection("chats");
 const SlaughterHouses = db.collection("slaughterhouses");
+
+/**
+ * register new user
+ * @date 2020-11-10
+ * @param {string} email
+ * @param {string} password
+ * @param {string} confirmPassword
+ * @param {object} data user data you want to insert to database
+ * @returns {object} user object for
+ */
 async function registerNewUser(email, password, confirmPassword, data) {
 	if (password !== confirmPassword) {
 		throw "Passwords don't match.";
@@ -33,15 +43,31 @@ async function registerNewUser(email, password, confirmPassword, data) {
 		});
 }
 
-async function uploadFiles(imageArray) {
-	let imagesURL = [...imageArray].map(async (imageUri) => {
-		return uploadFile(imageUri).then(async (data) => {
-			return data;
-		});
-	});
-	return Promise.all(imagesURL);
+/**
+ * upload files
+ * @date 2020-11-10
+ * @param {array} filesArray
+ * @returns {array of promise}
+ */
+async function uploadFiles(filesArray) {
+	return Promise.all(
+		[...filesArray].map(async (file) => {
+			return uploadFile(file).then(async (data) => {
+				return data;
+			});
+		})
+	);
 }
 
+/**
+ * create post with data
+ * @date 2020-11-10
+ * @param {string} title
+ * @param {string} description
+ * @param {string} postType
+ * @param {array} images
+ * @returns {string} post id
+ */
 async function createPost(title, description, postType, images) {
 	const current = await getCurrentUser();
 	const data = {
@@ -64,6 +90,13 @@ async function createPost(title, description, postType, images) {
 		});
 }
 
+/**
+ * insert comment to a post
+ * @date 2020-11-10
+ * @param {string} postId
+ * @param {string} comment
+ * @returns {boolean}
+ */
 async function commentPost(postId, comment) {
 	const current = await getCurrentUser();
 	const data = {
@@ -71,17 +104,24 @@ async function commentPost(postId, comment) {
 		comment,
 		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 	};
-
 	return Posts.doc(postId)
 		.collection("comment")
 		.add(data)
-		.then(() => {})
+		.then(() => {
+			return true;
+		})
 		.catch((error) => {
 			throw error.message;
 		});
 }
 
-const createChatRoom = async (sendUser) => {
+/**
+ * create a chatroom with another user
+ * @date 2020-11-10
+ * @param {string} sendUser other user's id
+ * @returns {string} chat room id
+ */
+async function createChatRoom(sendUser) {
 	const current = await getCurrentUser();
 	const userGroup = {
 		user1: current.id,
@@ -89,18 +129,25 @@ const createChatRoom = async (sendUser) => {
 		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 	};
 	return Chats.add(userGroup).then((doc) => {
-		db.collection("chats").doc(doc.id).update({ roomId: doc.id });
-		db.collection("users")
-			.doc(authContext.user.id)
-			.update({ chats: firebase.firestore.FieldValue.arrayUnion(doc.id) });
-		db.collection("users")
-			.doc(sendUser)
-			.update({ chats: firebase.firestore.FieldValue.arrayUnion(doc.id) });
+		Chats.doc(doc.id).update({ roomId: doc.id });
+		Users.doc(authContext.user.id).update({
+			chats: firebase.firestore.FieldValue.arrayUnion(doc.id),
+		});
+		Users.doc(sendUser).update({
+			chats: firebase.firestore.FieldValue.arrayUnion(doc.id),
+		});
 		return doc.id;
 	});
-};
+}
 
-const insertChat = async (room, message) => {
+/**
+ * insert chat to chat room by room id
+ * @date 2020-11-10
+ * @param {string} room
+ * @param {string} message
+ * @returns {boolean}
+ */
+async function insertChat(room, message) {
 	const current = await getCurrentUser();
 	const data = {
 		sendUser: current.id,
@@ -108,9 +155,17 @@ const insertChat = async (room, message) => {
 		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 	};
 	Chats.doc(room).collection("message").add(data);
-};
+	return true;
+}
 
-const createSlaughterHouse = (name, address) => {
+/**
+ * create SlaughterHouses
+ * @date 2020-11-10
+ * @param {string} name
+ * @param {string} address
+ * @returns {string} SlaughterHouse id
+ */
+async function createSlaughterHouse(name, address) {
 	const data = {
 		name,
 		rating: 0,
@@ -124,9 +179,18 @@ const createSlaughterHouse = (name, address) => {
 		});
 		return doc.id;
 	});
-};
+}
 
-const createBooking = async (businessName, date, time, businessId) => {
+/**
+ * create book by needed information
+ * @date 2020-11-10
+ * @param {string} businessName
+ * @param {string} date
+ * @param {string} time
+ * @param {string} businessId
+ * @returns {boolean}
+ */
+async function createBooking(businessName, date, time, businessId) {
 	const current = await getCurrentUser();
 	const data = {
 		businessName,
@@ -142,8 +206,9 @@ const createBooking = async (businessName, date, time, businessId) => {
 		.add(data)
 		.then(() => {
 			Users.doc(current.id).collection("booking").add(data);
+			return true;
 		});
-};
+}
 
 export {
 	registerNewUser,

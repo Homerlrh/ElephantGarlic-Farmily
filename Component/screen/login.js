@@ -7,7 +7,7 @@ import {
 	Button,
 	KeyboardAvoidingView,
 } from "react-native";
-import { getUseWithUID, login } from "../../firebase/collection/readData";
+import { login } from "../../firebase/collection/readData";
 import { AuthContext } from "../index";
 import styles from "../styles";
 

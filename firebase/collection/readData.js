@@ -3,7 +3,15 @@ const Users = db.collection("users");
 const Posts = db.collection("posts");
 const Chats = db.collection("chats");
 
-const login = (email, password) => {
+/**
+ * get user info when login
+ * @date 2020-11-10
+ * @param {string} email
+ * @param {string} password
+ * @returns {object}
+ *
+ */
+async function login(email, password) {
 	return firebase
 		.auth()
 		.signInWithEmailAndPassword(email, password)
@@ -15,9 +23,16 @@ const login = (email, password) => {
 		.catch((error) => {
 			throw error.message;
 		});
-};
+}
 
-const changePassword = async (NP, CNP) => {
+/**
+ * change password only when log in
+ * @date 2020-11-10
+ * @param {string} NP new password
+ * @param {string} CNP confirm new password
+ * @returns {boolean}
+ */
+async function changePassword(NP, CNP) {
 	if (NP === CNP && NP !== "" && CNP !== "") {
 		const user = auth.currentUser;
 		if (user) {
@@ -31,9 +46,14 @@ const changePassword = async (NP, CNP) => {
 				});
 		}
 	}
-};
+}
 
-const logout = () => {
+/**
+ * logout function
+ * @date 2020-11-10
+ * @returns {boolean}
+ */
+function logout() {
 	return auth
 		.signOut()
 		.then(function () {
@@ -42,8 +62,14 @@ const logout = () => {
 		.catch(function (error) {
 			throw error.message;
 		});
-};
+}
 
+/**
+ * get user information with user id
+ * @date 2020-11-10
+ * @param {string} uid
+ * @returns {object}
+ */
 async function getUseWithUID(uid) {
 	return Users.where("id", "==", uid)
 		.get()
@@ -59,6 +85,12 @@ async function getUseWithUID(uid) {
 		});
 }
 
+/**
+ * get user with user email
+ * @date 2020-11-10
+ * @param {sting} email
+ * @returns {object}
+ */
 async function getUserWithEmail(email) {
 	return Users.where("email", "==", email)
 		.get()
@@ -74,6 +106,12 @@ async function getUserWithEmail(email) {
 		});
 }
 
+/**
+ * get user with user email
+ * @date 2020-11-10
+ * @param {sting} userName
+ * @returns {object}
+ */
 async function getUserWithUsername(username) {
 	return Users.where("userName", "==", username)
 		.get()
@@ -89,6 +127,11 @@ async function getUserWithUsername(username) {
 		});
 }
 
+/**
+ * get current login user information
+ * @date 2020-11-10
+ * @returns {object}
+ */
 async function getCurrentUser() {
 	try {
 		const userId = auth.currentUser.uid;
@@ -99,6 +142,11 @@ async function getCurrentUser() {
 	}
 }
 
+/**
+ * get all the post in database
+ * @date 2020-11-10
+ * @returns {array of objects}
+ */
 async function getAllPost() {
 	const snapshot = await db
 		.collection("posts")
@@ -111,6 +159,12 @@ async function getAllPost() {
 	return array;
 }
 
+/**
+ * get post by post id, get the detail post
+ * @date 2020-11-10
+ * @param {string} id
+ * @returns {object}
+ */
 async function getPostById(id) {
 	const snapshot = await Posts.where("postId", "==", id).get();
 	let array = [];
@@ -120,6 +174,12 @@ async function getPostById(id) {
 	return array[0];
 }
 
+/**
+ * get all the comment from a post id
+ * @date 2020-11-10
+ * @param {string} id post id
+ * @returns {array of object} post comments
+ */
 async function getAllCommentByPost(id) {
 	const snapshot = await Posts.doc(id)
 		.collection("comment")
@@ -132,7 +192,14 @@ async function getAllCommentByPost(id) {
 	return array;
 }
 
-const getChatRoomById = (id) => {
+/**
+ * get chat room with chat room id
+ * store in user object
+ * @date 2020-11-10
+ * @param {string} id chat room id
+ * @returns {object}
+ */
+async function getChatRoomById(id) {
 	return Chats.where("roomId", "==", id)
 		.get()
 		.then((snapShots) => {
@@ -142,9 +209,15 @@ const getChatRoomById = (id) => {
 			});
 			return room[0];
 		});
-};
+}
 
-const getChatByRoomId = (id) => {
+/**
+ * get chat from a chat room
+ * @date 2020-11-10
+ * @param {string} id chat room id
+ * @returns {object}
+ */
+async function getLatestChatByRoomId(id) {
 	return Chats.doc(id)
 		.collection("message")
 		.orderBy("createdAt", "desc")
@@ -157,17 +230,27 @@ const getChatByRoomId = (id) => {
 			});
 			return c[0];
 		});
-};
+}
 
-const getCurrentUserChatList = () => {
+/**
+ * get all the chat list with the current user
+ * @date 2020-11-10
+ * @returns {Promise array}
+ */
+async function getCurrentUserChatList() {
 	return getCurrentUser().then((data) => {
 		return Promise.all(
 			data.chats.map(async (chat) => await getChatRoomById(chat))
 		);
 	});
-};
+}
 
-const chat = async () => {
+/**
+ * get all the chat for current user plus lastest message and other user basic info
+ * @date 2020-11-10
+ * @returns {array of objects}
+ */
+async function chat() {
 	const currentUser = await getCurrentUser();
 	return getCurrentUserChatList().then((chats) => {
 		return Promise.all(
@@ -185,14 +268,14 @@ const chat = async () => {
 						avatar: otherUser.avatar,
 					};
 				}
-				chat.latest = await getChatByRoomId(chat.roomId);
+				chat.latest = await getLatestChatByRoomId(chat.roomId);
 				delete chat.user1;
 				delete chat.user2;
 				return chat;
 			})
 		);
 	});
-};
+}
 
 export {
 	getUseWithUID,

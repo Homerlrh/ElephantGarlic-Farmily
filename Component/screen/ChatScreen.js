@@ -17,6 +17,7 @@ export default function ChatScreen({ navigation }) {
 			// 	"9:00AM ~ 10:00AM",
 			// 	"iVDgqZRsfV81dCx31HEu"
 			// );
+			console.log(chats);
 			setChats(chats);
 			setReady(true);
 		})();
