@@ -4,10 +4,13 @@ import style from '../../storybook/stories/CenterView/style';
 
 const styles = StyleSheet.create({
     container: {
+        // borderWidth: 1,
         borderBottomWidth: 1,
         // borderColor: "#E5E5E5",
-        width: '90%',
-        height: 280,
+        // minWidth: '90%',
+        minHeight: 190,
+        marginBottom: 10,
+        padding:10
     },
     row: {
         borderBottomWidth: 1,
@@ -15,13 +18,22 @@ const styles = StyleSheet.create({
     },
     imageCont: {
         maxWidth: "100%",
-        maxHeight: 150,
+        maxHeight: 100,
         marginBottom: 10,
+        borderRadius: 10,
+    },
+    textCont: {
+        // borderWidth: 1,
+        maxWidth: "100%",
+        minHeight: 50,
+        overflow:'hidden',
+        marginBottom: 10
     },
     actions: {
-        justifyContent: "center",
+        minWidth: '100%',
+        // borderWidth: 1,
         flexDirection: "row",
-        marginTop: 10,
+        height:20,
     },
     icon: {
         maxWidth: 20,
@@ -30,18 +42,17 @@ const styles = StyleSheet.create({
     },
     brcorner1: {
         flexDirection: "row",
-        justifyContent: "flex-start",
     },
     brcorner2: {
-        paddingLeft: "50%",
+        position: 'absolute',
         flexDirection: "row",
-        justifyContent: "flex-end",
+        right: 0,
     }
 
 })
 
-const ShListing = ({ txt1, txt2, txt3, txt4, txt5, fontsize }) => {
-    const [bordercolor, setBdColor] = useState("#2775C9");
+const ShListing = ({ txt1, txt2, txt3, txt4, txt5, fontsize, imagePath }) => {
+    const [bordercolor, setBdColor] = useState("#E5E5E5");
 
     const subject = { fontSize: fontsize ? fontsize : 22 };
     const bcolor = { borderColor: bordercolor ? bordercolor : "#2775C9" };
@@ -50,20 +61,21 @@ const ShListing = ({ txt1, txt2, txt3, txt4, txt5, fontsize }) => {
         onTouchStart={() => { setBdColor('#2775C9'); }}
         onTouchEnd={() => { setBdColor('#E5E5E5'); }}
     >
-        <View style={styles.imageCont}>
-            <Image
-                style={{ width: '100%', height: '100%', borderRadius: 10 }}
-                resizeMode='cover'
-                source={require('../../public/sh1.jpg')}
-            />
-        </View>
 
-        <View>
+            <Image
+                style={styles.imageCont}
+                resizeMode='cover'
+                source={imagePath ? imagePath : require('../../public/sh1.jpg')}
+            />
+
+
+        <View style={styles.textCont}>
             <Text
-                style={styles.container, subject}
+                style={styles.cont, subject}
             >{txt1}</Text>
             <Text>{txt2}</Text>
         </View>
+
         <View style={styles.actions}>
             <View style={styles.brcorner1} >
                 <Image

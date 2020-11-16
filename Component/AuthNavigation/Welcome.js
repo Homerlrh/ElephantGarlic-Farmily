@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
-import { ButtonF } from "../comps";
+import { Button } from "../comps";
 import styles from "../styles";
 
-export default function frontPage({ navigation }) {
+export default function FrontPage({ navigation }) {
 	const handleLogin = () => {
 		navigation.push("Login");
 	};
@@ -15,9 +15,14 @@ export default function frontPage({ navigation }) {
 	return (
 		<View style={styles.container}>
 			<Image source={require("../../assets/Farmily.png")} style={styles.img} />
-			<ButtonF text="Login" behaviour={handleLogin} />
+			<Button text="Login" handler={handleLogin} width="70%" />
 			<Text style={{ fontSize: 15, fontWeight: "bold" }}>OR</Text>
-			<ButtonF bgcolor="#00AC64" text="Sign up" behaviour={handleSignUp} />
+			<Button
+				bgcolor="#00AC64"
+				text="Sign up"
+				handler={handleSignUp}
+				width="70%"
+			/>
 		</View>
 	);
 }

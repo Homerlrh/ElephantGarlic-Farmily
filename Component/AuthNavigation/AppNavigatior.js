@@ -2,6 +2,8 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 
+import { Image } from "react-native";
+
 import {
 	CreatePost,
 	Home,
@@ -11,6 +13,7 @@ import {
 	ChatScreen,
 	DetailChat,
 } from "../index";
+import { Usermain } from "../pages";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -85,31 +88,72 @@ const ChatNavigator = () => {
 
 const AppNavigator = () => {
 	return (
-		<Tab.Navigator>
-			<Tab.Screen name="Home" component={Home} options={{ title: "Home" }} />
+		<Tab.Navigator
+			tabBarOptions={{
+				showLabel: false,
+				tabStyle: { alignItems: "center", justifyContent: "center" },
+				inactiveTintColor: "lightgrey",
+				activeTintColor: "blue",
+			}}
+		>
+			<Tab.Screen
+				name="Home"
+				component={Usermain}
+				options={{
+					tabBarIcon: () => (
+						<Image
+							source={require("../../Component/comps/Navigation/home.png")}
+						/>
+					),
+				}}
+			/>
 
 			<Tab.Screen
 				name="CreatePost"
 				component={CreatePostNavigator}
-				options={{ title: "Create Post" }}
+				options={{
+					tabBarIcon: () => (
+						<Image
+							source={require("../../Component/comps/Navigation/notification.png")}
+						/>
+					),
+				}}
 			/>
 
 			<Tab.Screen
-				name="AllPost"
+				name="Profile"
 				component={PostNavigator}
-				options={{ title: "All Post" }}
+				options={{
+					tabBarIcon: () => (
+						<Image
+							source={require("../../Component/comps/Navigation/profile.png")}
+						/>
+					),
+				}}
+			/>
+
+			<Tab.Screen
+				name="Favourite"
+				component={ChatNavigator}
+				options={{
+					tabBarIcon: () => (
+						<Image
+							source={require("../../Component/comps/Navigation/favourite.png")}
+						/>
+					),
+				}}
 			/>
 
 			<Tab.Screen
 				name="Chat"
 				component={ChatNavigator}
-				options={{ title: "chat screen" }}
-			/>
-
-			<Tab.Screen
-				name="AccountPage"
-				component={AccountPage}
-				options={{ title: "Account" }}
+				options={{
+					tabBarIcon: () => (
+						<Image
+							source={require("../../Component/comps/Navigation/chat.png")}
+						/>
+					),
+				}}
 			/>
 		</Tab.Navigator>
 	);

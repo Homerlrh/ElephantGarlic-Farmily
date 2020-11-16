@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
 	Image,
 	Text,
@@ -8,6 +8,8 @@ import {
 	KeyboardAvoidingView,
 } from "react-native";
 import { registerNewUser } from "../../firebase/collection/writeData";
+import { AuthContext } from "../index";
+
 import styles from "../styles";
 
 export default function Register({ navigation }) {
@@ -17,6 +19,8 @@ export default function Register({ navigation }) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+
+	const authContext = useContext(AuthContext);
 
 	const handleLogin = () => {
 		navigation.navigate("Login");
@@ -32,7 +36,7 @@ export default function Register({ navigation }) {
 
 		try {
 			await registerNewUser(email, password, confirmPassword, data);
-			navigation.navigate("Home");
+			authContext.setUser(user);
 		} catch (err) {
 			Alert.alert(err);
 		}

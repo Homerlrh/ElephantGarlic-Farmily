@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import style from '../../storybook/stories/CenterView/style';
 
 const styles = StyleSheet.create({
     container: {
         borderBottomWidth: 1,
-        borderBottomColor: "#E5E5E5",
         width: 375,
         padding: 15,
     },
@@ -14,7 +13,7 @@ const styles = StyleSheet.create({
         height: 30,
         marginRight: 10
     },
-    inner1: {
+    heading: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
@@ -22,33 +21,43 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
     },
 
-    inner: {
+    row: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
     },
+    user: {
+        flexDirection: "row",
+        alignItems: "center",
+        width:"40%",
+        // justifyContent: "space-between",
+    },
     icon: {
-        maxWidth:20,
-        maxHeight:20,
-        marginRight:-40
+        maxWidth: 20,
+        maxHeight: 20,
+        marginRight: -40
     },
     text: {
         fontSize: 24,
     }
 })
 
-const MarketHeading = ({ txt1, txt2, txt3, txt4, txt5, txt6 }) => {
-
-    return <View style={styles.container}>
-        <View style={styles.inner1}>
+const MarketHeading = ({ txt1, txt2, txt3, txt4, txt5, txt6, imagePath }) => {
+    const [bordercolor, setBdColor] = useState("#DADADA");
+    const bcolor = { borderColor: bordercolor ? bordercolor : "#DADADA" };
+    return <View style={[styles.container, styles.cont, bcolor]}
+        onTouchStart={() => { setBdColor("#00AC64"); }}
+        onTouchEnd={() => { setBdColor("#DADADA"); }}
+    >
+        <View style={styles.heading}>
             <Text style={styles.text}>{txt1}</Text>
             <Text style={styles.text}>{txt2}</Text>
         </View>
-        <View style={styles.inner}>
-            <View style={styles.inner}>
+        <View style={styles.row}>
+            <View style={styles.user}>
                 <Image
                     style={styles.avatar}
-                    source={require('../../public/a2.png')}
+                    source={imagePath ? imagePath : require('../../public/a2.png')}
                 />
                 <Text>{txt3}</Text>
             </View>
@@ -56,14 +65,14 @@ const MarketHeading = ({ txt1, txt2, txt3, txt4, txt5, txt6 }) => {
                 <Text>{txt4}</Text>
             </View>
             <View>
-                <View style={styles.inner}>
+                <View style={styles.row}>
                     <Image
                         style={styles.icon}
                         source={require('../../public/heart.png')}
                     />
                     <Text>{txt5}</Text>
                 </View>
-                <View style={styles.inner}>
+                <View style={styles.row}>
                     <Image
                         style={styles.icon}
                         source={require('../../public/eye.png')}

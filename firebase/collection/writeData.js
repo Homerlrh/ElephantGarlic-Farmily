@@ -1,4 +1,4 @@
-import { firebase, db } from "../firebase";
+import { firebase, db, auth } from "../firebase";
 import { getCurrentUser, getUseWithUID } from "./readData";
 import { uploadFile } from "../storage";
 const Users = db.collection("users");
@@ -19,8 +19,7 @@ async function registerNewUser(email, password, confirmPassword, data) {
 	if (password !== confirmPassword) {
 		throw "Passwords don't match.";
 	}
-	return firebase
-		.auth()
+	return auth
 		.createUserWithEmailAndPassword(email, password)
 		.then((response) => {
 			const uid = response.user.uid;
@@ -28,7 +27,7 @@ async function registerNewUser(email, password, confirmPassword, data) {
 			data.createdTime = currentTime;
 			data.id = uid;
 			data.chat = [];
-			Users.doc(uid)
+			return Users.doc(uid)
 				.set(data)
 				.then(async () => {
 					const user = await getUseWithUID(uid);

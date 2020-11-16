@@ -6,10 +6,11 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         borderWidth: 1,
-        borderColor: "#DADADA",
+        // borderColor: "#DADADA",
         borderRadius: 8,
         width: 375,
         padding: 15,
+        marginBottom:20,
     },
     avatar: {
         width: 40,
@@ -24,9 +25,16 @@ const styles = StyleSheet.create({
 
 const MsgBox = ({ txt1, txt2, imagePath }) => {
 
+    const [bordercolor, setBdColor] = useState("#DADADA");
+
+    const bcolor = { borderColor: bordercolor ? bordercolor : "#DADADA" };
 
 
-    return <View style={styles.container}>
+
+    return <View style={[styles.container, styles.cont, bcolor]}
+    onTouchStart={() => { setBdColor("#C97064"); }}
+    onTouchEnd={() => { setBdColor("#DADADA"); }}
+    >
         <View>
             <Image
                 style={styles.avatar}
