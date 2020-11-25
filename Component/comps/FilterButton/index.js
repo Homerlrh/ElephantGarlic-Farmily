@@ -7,7 +7,6 @@ import {
 	Button,
 	TouchableOpacity,
 } from "react-native";
-
 const styles = StyleSheet.create({
 	container: {
 		borderBottomWidth: 1,
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "flex-end",
 	},
-
 	outerbox: {},
 	underText: {
 		fontWeight: "bold",
@@ -64,8 +62,26 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 	},
 });
-
-const FilterButton = ({ type, text, setFilter, setCurrentSelection }) => {
+const FilterButton = ({
+	type,
+	text,
+	setFilter,
+	setCurrentSelection,
+	currentSelection,
+}) => {
+	const conditionalRender = StyleSheet.create({
+		underline1: {
+			borderBottomWidth: 3,
+			borderBottomColor:
+				currentSelection == "Discussion" ? "#FDB833" : "#00AC64",
+			padding: 10,
+		},
+		userline2: {
+			borderBottomWidth: 3,
+			borderBottomColor: "rgba(52, 52, 52, 0)",
+			padding: 10,
+		},
+	});
 	return (
 		<TouchableOpacity
 			onPress={() => {
@@ -73,7 +89,13 @@ const FilterButton = ({ type, text, setFilter, setCurrentSelection }) => {
 				setCurrentSelection(type);
 			}}
 		>
-			<View>
+			<View
+				style={
+					currentSelection == type
+						? conditionalRender.underline1
+						: conditionalRender.userline2
+				}
+			>
 				<Text style={styles.underText}>{text}</Text>
 			</View>
 		</TouchableOpacity>

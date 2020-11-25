@@ -61,22 +61,11 @@ async function uploadFiles(filesArray) {
 /**
  * create post with data
  * @date 2020-11-10
- * @param {string} title
- * @param {string} description
- * @param {string} postType
- * @param {array} images
+ * @param {object} data
  * @returns {string} post id
  */
-async function createPost(title, description, postType, images) {
-	const current = await getCurrentUser();
-	const data = {
-		createdBy: { name: current.userName, id: current.id },
-		title,
-		description,
-		postType,
-		images,
-		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-	};
+async function createPost(data) {
+	data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
 	return Posts.add(data)
 		.then((doc) => {
 			Posts.doc(doc.id).update({
@@ -209,6 +198,29 @@ async function createBooking(businessName, date, time, businessId) {
 		});
 }
 
+/**
+ * create slahghterhouse booking by business name
+ * @date 2020-11-24
+ * @param {string} businessName
+ * @param {string} date
+ * @param {string} time
+ * @returns {any}
+ */
+async function createSHBooking(businessName, date, time) {
+	const current = await getCurrentUser();
+	const data = {
+		businessName,
+		customer: `${current.firstName} ${current.lastName}`,
+		date,
+		time,
+		isDone: false,
+		isCancel: false,
+		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+	};
+	Users.doc(current.id).collection("booking").add(data);
+	return true;
+}
+
 export {
 	registerNewUser,
 	createPost,
@@ -218,4 +230,5 @@ export {
 	insertChat,
 	createSlaughterHouse,
 	createBooking,
+	createSHBooking,
 };

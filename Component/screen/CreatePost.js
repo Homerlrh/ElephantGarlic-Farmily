@@ -47,8 +47,9 @@ export default function CreatePost({ navigation }) {
 			const id = await createPost(
 				postTitle,
 				postDescription,
-				"disscussion",
-				imageList
+				"discussion",
+				imageList,
+				currentUser
 			);
 			setTimeout(() => {
 				navigation.navigate("DetailPost", { postId: id });

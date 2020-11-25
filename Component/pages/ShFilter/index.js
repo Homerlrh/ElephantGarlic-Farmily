@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions} from 'react-native';
+import { View, StyleSheet, ScrollView} from 'react-native';
 
 
 import InputDate from '../../comps/InputDate';
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     },
     Navi:{
         position:"absolute",
-        top:698
+        bottom:0
     },
     filterOption: {
         margin:20,
@@ -63,10 +63,10 @@ const ShFilter = () => {
     return (
         <View style={styles.container}>
             <View>
-            <Header
-                text="Slaughterhouse"
-                bottomColor="#2775C9"
-            />
+                <Header
+                    text="Slaughterhouse"
+                    bottomColor="#2775C9"
+                />
             </View>
             <View style={{}}>
                 <ScrollView style={styles.scroll}>

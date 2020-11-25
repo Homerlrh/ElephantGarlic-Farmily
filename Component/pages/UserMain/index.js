@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Image, ScrollView, StyleSheet, Text } from "react-native";
-
 import { TouchableOpacity } from "react-native-gesture-handler";
-
 import ForumPost from "../../comps/ForumPost";
 import LogoHeader from "../../comps/LogoHeader";
-import Navigation from "../../comps/Navigation";
 import TradePost from "../../comps/TradePost";
 import Underlined from "../../comps/Underlined";
 import FilterButton from "../../comps/FilterButton";
 import Button from "../../comps/Button";
 import { getAllPost } from "../../../firebase/collection/readData";
 
+import { AuthContext } from "../../index";
 const filterPost = {
 	Discussion: (post) => post.postType === "discussion",
 	Market: (post) => post.postType === "market",
@@ -23,20 +21,20 @@ export default function UserMain({ navigation }) {
 	//no use for now
 	const [isReady, setReady] = useState(false);
 
-	const [post, setPost] = useState([]); //empty array for re-render
-
 	// initial state is Discussion
 	const [filter, setFilter] = useState("Discussion");
 	const [currentSelection, setCurrentSelection] = useState("Discussion");
+
+	const authContext = useContext(AuthContext);
 
 	useEffect(() => {
 		setReady(false);
 		(async () => {
 			const b = await getAllPost();
-			setPost(b);
+			authContext.setPosts(b);
 			setReady(true);
 		})();
-	}, [setPost]);
+	}, []);
 
 	const filterButton = postType.map((type) => {
 		return (
@@ -46,44 +44,56 @@ export default function UserMain({ navigation }) {
 				type={type}
 				setFilter={setFilter}
 				setCurrentSelection={setCurrentSelection}
+				currentSelection={currentSelection}
 			/>
 		);
 	});
 
 	const handleDiss = () => {
-		navigation.navigate("Discussion");
+		navigation.navigate("forum");
 	};
 
 	const handleMark = () => {
-		navigation.navigate("Market");
-	};
-	const handleSh = () => {
-		navigation.navigate("Sh");
+		navigation.navigate("marketPost");
 	};
 
-	const postGroup = post
+	const handleSh = () => {
+		navigation.navigate("slaughter");
+	};
+
+	const postGroup = authContext.posts
 		.filter((type) => filterPost[filter](type))
 		.map((post) => {
-			if (post.type === "discussion") {
+			if (post.postType === "discussion") {
 				return (
-					<TouchableOpacity key={post.postId}>
+					<TouchableOpacity
+						key={post.postId}
+						onPress={() => {
+							navigation.navigate("discussionDetail", { postId: post.postId });
+						}}
+					>
 						<ForumPost
 							maxheight={100}
-							imagePath={post.images[0]}
 							txt1={post.title}
 							txt2={post.description}
+							imagePath={post.images[0]}
 						/>
 					</TouchableOpacity>
 				);
 			} else {
 				return (
-					<TouchableOpacity key={post.postId}>
+					<TouchableOpacity
+						key={post.postId}
+						onPress={() => {
+							navigation.navigate("marketDetail", { postId: post.postId });
+						}}
+					>
 						<TradePost
 							maxheight={100}
-							imagePath={post.images[0]}
 							txt1={post.title}
-							txt2={null}
+							txt2={post.price}
 							txt3={post.description}
+							imagePath={post.images[0]}
 						/>
 					</TouchableOpacity>
 				);
@@ -164,8 +174,7 @@ const styles = StyleSheet.create({
 		borderWidth: 3,
 		width: "90%",
 		borderRadius: 10,
-		height: "80%",
-		maxHeight: "80%",
+		height: 400,
 	},
 	allPostBody2: {
 		marginTop: 20,
@@ -173,8 +182,7 @@ const styles = StyleSheet.create({
 		borderWidth: 3,
 		width: "90%",
 		borderRadius: 10,
-		height: "80%",
-		maxHeight: "80%",
+		height: 400,
 	},
 	icon: {
 		resizeMode: "contain",

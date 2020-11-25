@@ -71,44 +71,42 @@ const ForumPost = ({
 	const height = { maxHeight: maxheight ? maxheight : 150 };
 
 	return (
-		<TouchableOpacity>
-			<View
-				style={[styles.container, styles.cont, bcolor, height]}
-				onTouchStart={() => {
-					setBdColor("#FDB833");
-				}}
-				onTouchEnd={() => {
-					setBdColor("#E5E5E5");
-				}}
-			>
-				<View style={styles.row}>
-					<View style={styles.texts}>
-						<Text style={[styles.cont, subject]}>{txt1}</Text>
-						<Text>{txt2}</Text>
-					</View>
-
-					<Image
-						style={styles.photo}
-						source={
-							imagePath ? { uri: imagePath } : require("../../public/dogs.png")
-						}
-					/>
+		<View
+			style={[styles.container, styles.cont, bcolor, height]}
+			onTouchStart={() => {
+				setBdColor("#FDB833");
+			}}
+			onTouchEnd={() => {
+				setBdColor("#E5E5E5");
+			}}
+		>
+			<View style={styles.row}>
+				<View style={styles.texts}>
+					<Text style={[styles.cont, subject]}>{txt1}</Text>
+					<Text>{txt2}</Text>
 				</View>
 
-				<View style={styles.actions}>
-					<View style={styles.brcorner1}>
-						<Image style={styles.icon} source={icon1} />
-						<Text style={styles.smtxt}>{txt3}</Text>
-						<Image style={styles.icon} source={icon2} />
-						<Text style={styles.smtxt}>{txt4}</Text>
-					</View>
-					<View style={styles.brcorner2}>
-						<Image style={styles.icon} source={icon3} />
-						<Image style={styles.icon} source={icon4} />
-					</View>
+				<Image
+					style={styles.photo}
+					source={
+						imagePath ? { uri: imagePath } : require("../../public/dogs.png")
+					}
+				/>
+			</View>
+
+			<View style={styles.actions}>
+				<View style={styles.brcorner1}>
+					<Image style={styles.icon} source={icon1} />
+					<Text style={styles.smtxt}>{txt3}</Text>
+					<Image style={styles.icon} source={icon2} />
+					<Text style={styles.smtxt}>{txt4}</Text>
+				</View>
+				<View style={styles.brcorner2}>
+					<Image style={styles.icon} source={icon3} />
+					<Image style={styles.icon} source={icon4} />
 				</View>
 			</View>
-		</TouchableOpacity>
+		</View>
 	);
 };
 

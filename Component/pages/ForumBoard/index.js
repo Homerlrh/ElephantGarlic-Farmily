@@ -1,16 +1,17 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, StyleSheet, Image, TextInput } from "react-native";
 
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { AuthContext } from "../..";
 
 import ForumPost from "../../comps/ForumPost";
 import Header from "../../comps/Header";
-import Navigation from "../../comps/Navigation";
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: "center",
+		marginTop: "10%",
 		// justifyContent: 'center',
 	},
 	body: {
@@ -37,20 +38,33 @@ const styles = StyleSheet.create({
 
 const ForumBoard = ({ navigation }) => {
 	const handleDpost = (id) => {
-		navigation.navigate("detailPost", { postId: id });
+		navigation.navigate("discussionDetail", { postId: id });
 	};
 
-	const [post, setPost] = useState([]);
+	const [dpost, setDpost] = useState([]);
 
+	const authContext = useContext(AuthContext);
 	useEffect(() => {
-		setReady(false);
-		(async () => {
-			const b = await getAllPost();
-			setPost(b);
-			setReady(true);
-		})();
-	}, [setPost]);
+		const discussion = authContext.posts.filter(
+			(x) => x.postType === "discussion"
+		);
+		setDpost(discussion);
+	}, [authContext.posts]);
 
+	const list = dpost.map((post) => (
+		<TouchableOpacity
+			key={post.postId}
+			onPress={() => {
+				navigation.navigate("discussionDetail", { postId: post.postId });
+			}}
+		>
+			<ForumPost
+				txt1={post.title}
+				txt2={post.description}
+				imagePath={post.images[0]}
+			/>
+		</TouchableOpacity>
+	));
 	return (
 		<View style={styles.container}>
 			<Header
@@ -58,6 +72,9 @@ const ForumBoard = ({ navigation }) => {
 				iconRight={require("../../public/pencil.png")}
 				iconLeft={require("../../public/filter.png")}
 				bottomColor="#FDB833"
+				fuc2={() => {
+					navigation.push("createPost", { type: "discussion" });
+				}}
 			/>
 			<View style={styles.body}>
 				{/* this input is for testing pages only -- start */}
@@ -81,26 +98,7 @@ const ForumBoard = ({ navigation }) => {
 					></Image>
 				</View>
 				{/* this input is for testing pages only -- end */}
-				<TouchableOpacity onPress={handleDpost}>
-					<ForumPost />
-				</TouchableOpacity>
-				<TouchableOpacity onPress={handleDpost}>
-					<ForumPost
-						imagePath={require("../../public/sh2.png")}
-						txt1="OMG"
-						txt2="WOW"
-					/>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={handleDpost}>
-					<ForumPost
-						imagePath={require("../../public/sh3.png")}
-						txt1="Ok Alright"
-						txt2="dont stop the dancing"
-					/>
-				</TouchableOpacity>
-			</View>
-			<View style={styles.Forum_Navi}>
-				<Navigation />
+				<ScrollView style={{ maxHeight: 600 }}>{list}</ScrollView>
 			</View>
 		</View>
 	);

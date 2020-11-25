@@ -17,6 +17,9 @@
 		"ios": {
 			"supportsTablet": true
 		},
+		"android": {
+			"package": "com.ElephantGarlic.Farmliy"
+		},
 		"web": {
 			"favicon": "./assets/Farmily.png"
 		}

@@ -9,7 +9,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
-export default function ImageInput({ imageUri, onChangeImage }) {
+export default function ImageInput({ type, imageUri, onChangeImage }) {
 	const handleUploadPhoto = async () => {
 		try {
 			const result = await ImagePicker.launchImageLibraryAsync({
@@ -32,11 +32,20 @@ export default function ImageInput({ imageUri, onChangeImage }) {
 
 	return (
 		<TouchableWithoutFeedback onPress={handlePress}>
-			<View style={styles.container}>
+			<View style={!type ? styles.container : styles.round}>
 				{!imageUri && (
-					<MaterialCommunityIcons name="camera" size={50} color="black" />
+					<MaterialCommunityIcons
+						name={!type ? "camera" : type}
+						size={50}
+						color="black"
+					/>
 				)}
-				{imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+				{imageUri && (
+					<Image
+						source={{ uri: imageUri }}
+						style={!type ? styles.image : styles.roundImage}
+					/>
+				)}
 			</View>
 		</TouchableWithoutFeedback>
 	);
@@ -53,6 +62,19 @@ const styles = StyleSheet.create({
 	},
 	image: {
 		borderRadius: 15,
+		width: 125,
+		height: 125,
+	},
+	round: {
+		alignItems: "center",
+		backgroundColor: "#fff",
+		borderRadius: 100,
+		height: 125,
+		width: 125,
+		justifyContent: "center",
+	},
+	roundImage: {
+		borderRadius: 100,
 		width: 125,
 		height: 125,
 	},

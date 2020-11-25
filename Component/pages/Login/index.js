@@ -7,6 +7,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 	KeyboardAvoidingView,
+	Alert,
 } from "react-native";
 import Button from "../../comps/Button";
 import UserTextInput from "../../comps/Inputs";

@@ -5,15 +5,28 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Image } from "react-native";
 
 import {
-	CreatePost,
 	Home,
 	DetailPost,
 	AllPost,
 	AccountPage,
+	//CreatePost,
 	ChatScreen,
 	DetailChat,
 } from "../index";
-import { Usermain } from "../pages";
+import {
+	Usermain,
+	Forum,
+	MarketPost,
+	postDetail,
+	marketDetail,
+	CreatePost,
+	AllShHouse,
+	Profile,
+	Favourite,
+	Notification,
+	messageUi,
+	ShDetail,
+} from "../pages";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -69,12 +82,91 @@ const PostNavigator = () => {
 // 	)
 // }
 
+const postNavigator = () => {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen
+				name="home"
+				component={Usermain}
+				options={{ title: "All Post" }}
+			/>
+			<Stack.Screen
+				name="forum"
+				component={Forum}
+				options={{ title: "Forum" }}
+			/>
+			<Stack.Screen
+				name="marketPost"
+				component={MarketPost}
+				options={{ title: "Market" }}
+			/>
+			<Stack.Screen
+				name="discussionDetail"
+				component={postDetail}
+				options={{ title: "Disscusion" }}
+			/>
+			<Stack.Screen
+				name="marketDetail"
+				component={marketDetail}
+				options={{ title: "Market" }}
+			/>
+			<Stack.Screen
+				name="createPost"
+				component={CreatePost}
+				options={{ title: "create" }}
+			/>
+			<Stack.Screen
+				name="slaughter"
+				component={AllShHouse}
+				options={{ title: "Slaughterhouse" }}
+			/>
+			<Stack.Screen
+				name="detailSlaughter"
+				component={ShDetail}
+				options={{ title: "detailSlauterhouse" }}
+			/>
+		</Stack.Navigator>
+	);
+};
+
+const postNavigator2 = () => {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen
+				name="forum"
+				component={Forum}
+				options={{ title: "Forum" }}
+			/>
+			<Stack.Screen
+				name="marketPost"
+				component={MarketPost}
+				options={{ title: "Market" }}
+			/>
+			<Stack.Screen
+				name="marketDetail"
+				component={marketDetail}
+				options={{ title: "Market" }}
+			/>
+			<Stack.Screen
+				name="createPost"
+				component={CreatePost}
+				options={{ title: "create" }}
+			/>
+			<Stack.Screen
+				name="slaughter"
+				component={AllShHouse}
+				options={{ title: "Slaughterhouse" }}
+			/>
+		</Stack.Navigator>
+	);
+};
+
 const ChatNavigator = () => {
 	return (
-		<Stack.Navigator>
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
 			<Stack.Screen
 				name="AllChat"
-				component={ChatScreen}
+				component={messageUi}
 				options={{ title: "All chats" }}
 			/>
 			<Stack.Screen
@@ -98,7 +190,7 @@ const AppNavigator = () => {
 		>
 			<Tab.Screen
 				name="Home"
-				component={Usermain}
+				component={postNavigator}
 				options={{
 					tabBarIcon: () => (
 						<Image
@@ -110,7 +202,7 @@ const AppNavigator = () => {
 
 			<Tab.Screen
 				name="CreatePost"
-				component={CreatePostNavigator}
+				component={Notification}
 				options={{
 					tabBarIcon: () => (
 						<Image
@@ -122,7 +214,7 @@ const AppNavigator = () => {
 
 			<Tab.Screen
 				name="Profile"
-				component={PostNavigator}
+				component={Profile}
 				options={{
 					tabBarIcon: () => (
 						<Image
@@ -134,7 +226,7 @@ const AppNavigator = () => {
 
 			<Tab.Screen
 				name="Favourite"
-				component={ChatNavigator}
+				component={Favourite}
 				options={{
 					tabBarIcon: () => (
 						<Image

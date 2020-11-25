@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
 	View,
 	Text,
@@ -8,12 +8,22 @@ import {
 	TouchableOpacity,
 	KeyboardAvoidingView,
 	Alert,
+	ActivityIndicator,
 } from "react-native";
 import Button from "../../comps/Button";
 import { AuthContext } from "../../index";
 import { registerNewUser } from "../../../firebase/collection/writeData";
+import * as ImagePicker from "expo-image-picker";
+import ImageInput from "../../createPost/ImageInput";
+import { uploadFile } from "../../../firebase/storage";
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
+	},
 	signuppage: {
 		alignItems: "center",
 		justifyContent: "center",
@@ -50,9 +60,18 @@ const styles = StyleSheet.create({
 		paddingVertical: 8,
 		paddingLeft: 5,
 	},
+	avatar: {
+		marginBottom: 20,
+		width: 125,
+		height: 125,
+		borderRadius: 100,
+	},
 });
 
 const SignUp = ({ navigation }) => {
+	const [isReady, setReady] = useState(true);
+
+	const [imageUri, setImageUri] = useState();
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [userName, setUserName] = useState("");
@@ -62,37 +81,61 @@ const SignUp = ({ navigation }) => {
 
 	const authContext = useContext(AuthContext);
 
+	useEffect(() => {
+		const requestPermission = async () => {
+			const { granted } = await ImagePicker.requestCameraRollPermissionsAsync();
+			if (!granted) {
+				Alert.alert("You need to enable permisssion to use this feature");
+			}
+		};
+		requestPermission();
+	}, []);
+
 	const handleHome = () => {
 		navigation.navigate("Welcome");
 	};
 
 	const signUP = async () => {
-		const data = {
-			firstName,
-			lastName,
-			userName,
-			email,
-		};
+		setReady(false);
 		try {
+			let avatar = "";
+			if (imageUri) {
+				avatar = await uploadFile(imageUri);
+			}
+			const data = {
+				firstName,
+				lastName,
+				userName,
+				email,
+				avatar,
+			};
 			registerNewUser(email, password, confirmPassword, data).then((user) => {
 				authContext.setUser(user);
 			});
+			setReady(true);
 		} catch (err) {
 			Alert.alert(err);
 		}
 	};
 
-	return (
+	return isReady === false ? (
+		<View style={styles.container}>
+			<ActivityIndicator animating={!isReady} size="large" />
+			<Text>Loading</Text>
+		</View>
+	) : (
 		<KeyboardAvoidingView
 			style={styles.signuppage}
 			behavior={Platform.OS == "ios" ? "padding" : "height"}
 		>
 			<Image source={require("./logoV.png")} style={styles.logoV} />
-			<Image //Will use Expo ImagePicker API here instead, just need guidance for this part...
-				source={require("./user.png")}
-				style={styles.user}
-			/>
-
+			<View style={styles.avatar}>
+				<ImageInput
+					type="account"
+					imageUri={imageUri}
+					onChangeImage={(uri) => setImageUri(uri)}
+				/>
+			</View>
 			<TextInput
 				style={styles.inputSpace}
 				placeholder="ex: John"

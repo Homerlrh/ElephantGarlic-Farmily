@@ -33,6 +33,7 @@ export async function uploadFile(uri) {
 			function (snapshot) {},
 			function (err) {
 				console.log("failed to upload photo");
+				console.log(err);
 				rej(err);
 			},
 			function () {

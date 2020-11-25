@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -7,6 +7,7 @@ import {
 	ScrollView,
 	TouchableOpacity,
 } from "react-native";
+import { AuthContext } from "..";
 import { getAllPost } from "../../firebase/collection/readData";
 import { FilterButton } from "../comps";
 
@@ -19,23 +20,24 @@ const postType = Object.keys(filterPost);
 
 export default function AllPost({ navigation }) {
 	const [isReady, setReady] = useState(false);
-	const [postList, setPostList] = useState([]);
 	const [filter, setFilter] = useState("Disscussion");
+
+	const authContext = useContext(AuthContext);
 
 	useEffect(() => {
 		setReady(false);
 		(async () => {
 			const b = await getAllPost();
-			setPostList(b);
+			authContext.setPosts(b);
 			setReady(true);
 		})();
-	}, [setPostList]);
+	}, [authContext.posts]);
 
 	const handleDetailPost = (id) => {
 		navigation.navigate("DetailPost", { postId: id });
 	};
 
-	const postScreen = postList
+	const postScreen = authContext.posts
 		.filter((type) => filterPost[filter](type))
 		.map((post) => (
 			<TouchableOpacity

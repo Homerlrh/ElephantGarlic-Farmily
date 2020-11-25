@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
-
 const styles = StyleSheet.create({
 	container: {
 		borderBottomWidth: 1,
 		borderTopWidth: 1,
-		// borderColor: "#E5E5E5",
 		maxWidth: "100%",
-		// maxHeight: 150,
-		padding: 15,
+		padding: 10,
 		overflow: "hidden",
 	},
-
 	row: {
 		flexDirection: "row",
 	},
@@ -21,18 +17,19 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 	texts: {
-		maxWidth: "65%",
+		padding: 15,
+		maxWidth: "60%",
 	},
 	photo: {
-		maxWidth: "30%",
-		maxHeight: 80,
-		marginRight: "2%",
+		left: 0,
+		width: "40%",
+		height: 80,
+		// flexGrow: 1,
 	},
 	actions: {
 		flexDirection: "row",
 		marginTop: 20,
 	},
-
 	icon: {
 		maxWidth: 20,
 		maxHeight: 20,
@@ -44,7 +41,6 @@ const styles = StyleSheet.create({
 		marginRight: 5,
 	},
 	brcorner1: {
-		// borderWidth:1,
 		maxWidth: "50%",
 		flexDirection: "row",
 	},
@@ -88,12 +84,17 @@ const TradePost = ({
 			<View style={styles.row}>
 				<Image
 					style={styles.photo}
-					source={imagePath ? imagePath : require("../../public/tractor.png")}
+					source={
+						imagePath ? { uri: imagePath } : require("../../public/tractor.png")
+					}
 				/>
+
 				<View style={styles.texts}>
 					<View style={styles.subheading}>
 						<Text style={[styles.cont, subject]}>{txt1}</Text>
-						<Text style={[styles.cont, subject]}>{txt2}</Text>
+						<Text style={[styles.cont, subject]}>
+							{txt2 ? "$" + txt2 : txt2}
+						</Text>
 					</View>
 					<Text>{txt3}</Text>
 				</View>
@@ -133,7 +134,7 @@ const TradePost = ({
 
 TradePost.defaultProps = {
 	txt1: "Tractor for sale",
-	txt2: "$1000",
+	txt2: "1000",
 	txt3:
 		"Bought bigger one for more grains... 5 years, perfect condition, $500, message for more details...",
 	txt4: "25",
