@@ -44,24 +44,10 @@ const MyTab2 = ({ iconExpand, text, dropdown }) => {
 };
 const styles = StyleSheet.create({
 	container: {
-		// backgroundColor: "#fff",
-		// borderTopLeftRadius: 10,
-		// borderTopRightRadius: 10,
-		// borderBottomLeftRadius: 10,
-		// borderBottomRightRadius: 10,
 		borderTopWidth: 1,
 		borderBottomWidth: 1,
-
-		// borderTopColor:"#DADADA",
-		// borderBottomColor:"#DADADA",
-		// borderRightColor:"#fff",
-		// borderLeftColor:"#fff",
-		// borderColor: "#2775C9",
 		width: 400,
 		maxHeight: "100%",
-		// justifyContent: "center",
-		// marginVertical: 8,
-		// marginTop: 100,
 		marginHorizontal: 50,
 		padding: 20,
 		display: "flex",
@@ -69,35 +55,19 @@ const styles = StyleSheet.create({
 		alignContent: "space-between",
 	},
 	title: {
-		fontFamily: "Josefin Sans",
 		fontSize: 24,
-		// style:"normal",
 		alignItems: "flex-start",
 		justifyContent: "center",
-		// marginHorizental: 100,
-		// marginLeft: 20,
 		fontWeight: "bold",
 	},
-	// headIconE: {
-	//   position:"relative",
-	//   right:0,
-	//   // marginVertical:5,
-	//   maxHeight:30,
-	//   maxWidth:30,
-	//   resizeMode:"contain"
-	// },
-
 	hourContainer: {
-		// backgroundColor: "#FFFFFF",
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
 		alignItems: "center",
-		//  alignSelf: "stretch",
 		resizeMode: "contain",
 		marginTop: "10%",
 		marginRight: "30%",
-		//  marginRight:70
 	},
 });
 MyTab2.defaultProps = {

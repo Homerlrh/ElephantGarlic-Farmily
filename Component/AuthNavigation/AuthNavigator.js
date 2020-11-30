@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import FrontPage from "./Welcome";
 import Login from "../pages/Login";
 import Register from "../pages/SignUp";
+import ScorllviewContext from "../Context/ScorllviewContext";
 
 const Stack = createStackNavigator();
 

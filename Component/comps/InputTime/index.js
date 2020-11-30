@@ -22,8 +22,9 @@ const InputTime = ({ dropdown, setTime }) => {
 		{ time: "4:00am - 5:00pm" },
 	];
 
-	const timeSlots = obj.map((timeslot) => (
+	const timeSlots = obj.map((timeslot, index) => (
 		<TouchableOpacity
+			key={index}
 			onPress={() => {
 				setTime(timeslot.time);
 				sett(timeslot.time);
@@ -94,7 +95,6 @@ const styles = StyleSheet.create({
 		color: "#000000",
 		fontWeight: "600",
 		fontSize: 16,
-		fontFamily: "Roboto",
 		padding: 5,
 	},
 
@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
 		color: "#000000",
 		fontWeight: "600",
 		fontSize: 16,
-		fontFamily: "Roboto",
 		margin: 12,
 	},
 

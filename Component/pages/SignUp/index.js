@@ -16,6 +16,7 @@ import { registerNewUser } from "../../../firebase/collection/writeData";
 import * as ImagePicker from "expo-image-picker";
 import ImageInput from "../../createPost/ImageInput";
 import { uploadFile } from "../../../firebase/storage";
+import ScorllviewContext from "../../Context/ScorllviewContext";
 
 const styles = StyleSheet.create({
 	container: {
@@ -62,15 +63,11 @@ const styles = StyleSheet.create({
 	},
 	avatar: {
 		marginBottom: 20,
-		width: 125,
-		height: 125,
-		borderRadius: 100,
 	},
 });
 
 const SignUp = ({ navigation }) => {
 	const [isReady, setReady] = useState(true);
-
 	const [imageUri, setImageUri] = useState();
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -78,7 +75,6 @@ const SignUp = ({ navigation }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-
 	const authContext = useContext(AuthContext);
 
 	useEffect(() => {
@@ -97,25 +93,28 @@ const SignUp = ({ navigation }) => {
 
 	const signUP = async () => {
 		setReady(false);
-		try {
-			let avatar = "";
-			if (imageUri) {
-				avatar = await uploadFile(imageUri);
-			}
-			const data = {
-				firstName,
-				lastName,
-				userName,
-				email,
-				avatar,
-			};
-			registerNewUser(email, password, confirmPassword, data).then((user) => {
-				authContext.setUser(user);
-			});
-			setReady(true);
-		} catch (err) {
-			Alert.alert(err);
+
+		let avatar = "";
+		if (imageUri) {
+			avatar = await uploadFile(imageUri);
 		}
+		const data = {
+			firstName,
+			lastName,
+			userName,
+			email,
+			avatar,
+		};
+
+		registerNewUser(email, password, confirmPassword, data)
+			.then((user) => {
+				authContext.setUser(user);
+			})
+			.catch((err) => {
+				Alert.alert(err);
+			});
+
+		setReady(true);
 	};
 
 	return isReady === false ? (
@@ -126,72 +125,74 @@ const SignUp = ({ navigation }) => {
 	) : (
 		<KeyboardAvoidingView
 			style={styles.signuppage}
-			behavior={Platform.OS == "ios" ? "padding" : "height"}
+			behavior={Platform.OS == "ios" ? "padding" : null}
 		>
-			<Image source={require("./logoV.png")} style={styles.logoV} />
-			<View style={styles.avatar}>
-				<ImageInput
-					type="account"
-					imageUri={imageUri}
-					onChangeImage={(uri) => setImageUri(uri)}
+			<ScorllviewContext>
+				<Image source={require("./logoV.png")} style={styles.logoV} />
+				<View style={styles.avatar}>
+					<ImageInput
+						type="account"
+						imageUri={imageUri}
+						onChangeImage={(uri) => setImageUri(uri)}
+					/>
+				</View>
+				<TextInput
+					style={styles.inputSpace}
+					placeholder="ex: John"
+					onChangeText={(text) => setFirstName(text)}
+					value={firstName}
 				/>
-			</View>
-			<TextInput
-				style={styles.inputSpace}
-				placeholder="ex: John"
-				onChangeText={(text) => setFirstName(text)}
-				value={firstName}
-			/>
 
-			<TextInput
-				style={styles.inputSpace}
-				placeholder="ex: Doe"
-				onChangeText={(text) => setLastName(text)}
-				value={lastName}
-			/>
-
-			<TextInput
-				style={styles.inputSpace}
-				placeholder="Username"
-				onChangeText={(text) => setUserName(text)}
-				value={userName}
-			/>
-
-			<TextInput
-				style={styles.inputSpace}
-				placeholder="Email"
-				onChangeText={(text) => setEmail(text)}
-				value={email}
-			/>
-
-			<TextInput
-				style={styles.inputSpace}
-				placeholder="Password"
-				secureTextEntry
-				onChangeText={(text) => setPassword(text)}
-				value={password}
-			/>
-
-			<TextInput
-				style={styles.inputSpace}
-				placeholder="Confirm Password"
-				secureTextEntry
-				onChangeText={(text) => setConfirmPassword(text)}
-				value={confirmPassword}
-			/>
-
-			<View style={styles.signupB}>
-				<Button
-					bgcolor="#00AC64"
-					text="SIGN UP"
-					handler={() => {
-						signUP();
-					}}
+				<TextInput
+					style={styles.inputSpace}
+					placeholder="ex: Doe"
+					onChangeText={(text) => setLastName(text)}
+					value={lastName}
 				/>
-			</View>
-			<TouchableOpacity onPress={handleHome}>
-				<Text style={styles.signupBack}>BACK</Text>
-			</TouchableOpacity>
+
+				<TextInput
+					style={styles.inputSpace}
+					placeholder="Username"
+					onChangeText={(text) => setUserName(text)}
+					value={userName}
+				/>
+
+				<TextInput
+					style={styles.inputSpace}
+					placeholder="Email"
+					onChangeText={(text) => setEmail(text)}
+					value={email}
+				/>
+
+				<TextInput
+					style={styles.inputSpace}
+					placeholder="Password"
+					secureTextEntry
+					onChangeText={(text) => setPassword(text)}
+					value={password}
+				/>
+
+				<TextInput
+					style={styles.inputSpace}
+					placeholder="Confirm Password"
+					secureTextEntry
+					onChangeText={(text) => setConfirmPassword(text)}
+					value={confirmPassword}
+				/>
+
+				<View style={styles.signupB}>
+					<Button
+						bgcolor="#00AC64"
+						text="SIGN UP"
+						handler={() => {
+							signUP();
+						}}
+					/>
+				</View>
+				<TouchableOpacity onPress={handleHome}>
+					<Text style={styles.signupBack}>BACK</Text>
+				</TouchableOpacity>
+			</ScorllviewContext>
 		</KeyboardAvoidingView>
 	);
 };

@@ -175,6 +175,21 @@ async function getPostById(id) {
 }
 
 /**
+ * get pots by current user id
+ * @date 2020-11-29
+ * @param {string} id
+ * @returns {array of object}
+ */
+async function getPostByUserId(id) {
+	const snapshot = await Posts.where("createdBy.id", "==", id).get();
+	let array = [];
+	snapshot.forEach(async (x) => {
+		array = [...array, x.data()];
+	});
+	return array;
+}
+
+/**
  * get all the comment from a post id
  * @date 2020-11-10
  * @param {string} id post id
@@ -286,6 +301,7 @@ export {
 	getCurrentUser,
 	getAllPost,
 	getPostById,
+	getPostByUserId,
 	getAllCommentByPost,
 	changePassword,
 	chat,

@@ -8,7 +8,6 @@ import {
 	ScrollView,
 	TouchableOpacity,
 } from "react-native";
-import ShListing from "../../comps/ShListing";
 import Header from "../../comps/Header";
 import * as Location from "expo-location";
 import {
@@ -25,13 +24,10 @@ const styles = StyleSheet.create({
 		marginTop: "5%",
 	},
 	body: {
-		position: "absolute",
-		top: "14%",
-		alignItems: "center",
+		paddingTop: "30%",
 	},
 	row: {
 		flexDirection: "row",
-		// alignItems: "center"
 		justifyContent: "center",
 	},
 	icon: {
@@ -39,10 +35,6 @@ const styles = StyleSheet.create({
 		maxWidth: 25,
 		maxHeight: 25,
 		margin: 10,
-	},
-	Navi: {
-		position: "absolute",
-		top: 698,
 	},
 	shContainer: {
 		maxWidth: "100%",
@@ -105,7 +97,10 @@ const ShMain = ({ navigation }) => {
 		isReady === false
 			? null
 			: slHouseList.map((house) => (
-					<TouchableOpacity key={house.id} onPress={() => handleShB(house)}>
+					<TouchableOpacity
+						key={house.place_id}
+						onPress={() => handleShB(house)}
+					>
 						<View style={styles.shContainer}>
 							{house.photos ? (
 								<SlImage image={house.photos} />

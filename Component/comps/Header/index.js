@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
 		minHeight: "15%",
 	},
 	innerHeadBox: {
-		// borderWidth: 1,
 		alignItems: "center",
 		flexDirection: "row",
 		margin: 5,

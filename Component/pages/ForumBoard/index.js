@@ -12,16 +12,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		marginTop: "10%",
-		// justifyContent: 'center',
 	},
 	body: {
-		position: "absolute",
-		top: "14%",
-		alignItems: "center",
+		marginTop: "30%",
 	},
 	row: {
 		flexDirection: "row",
-		// alignItems: "center"
 		justifyContent: "center",
 	},
 	icon: {
@@ -37,10 +33,6 @@ const styles = StyleSheet.create({
 });
 
 const ForumBoard = ({ navigation }) => {
-	const handleDpost = (id) => {
-		navigation.navigate("discussionDetail", { postId: id });
-	};
-
 	const [dpost, setDpost] = useState([]);
 
 	const authContext = useContext(AuthContext);
@@ -98,7 +90,7 @@ const ForumBoard = ({ navigation }) => {
 					></Image>
 				</View>
 				{/* this input is for testing pages only -- end */}
-				<ScrollView style={{ maxHeight: 600 }}>{list}</ScrollView>
+				<ScrollView>{list}</ScrollView>
 			</View>
 		</View>
 	);

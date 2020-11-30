@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 	title: {
-		fontFamily: "Josefin Sans",
 		fontSize: 25,
 		alignItems: "flex-start",
 		justifyContent: "flex-start",

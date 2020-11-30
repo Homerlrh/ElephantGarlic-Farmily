@@ -13,11 +13,13 @@ import Button from "../../comps/Button";
 import UserTextInput from "../../comps/Inputs";
 import { AuthContext } from "../../index";
 import { login } from "../../../firebase/collection/readData";
+import { ScrollView } from "react-native-gesture-handler";
+import ScorllviewContext from "../../Context/ScorllviewContext";
 const styles = StyleSheet.create({
 	loginpage: {
 		alignItems: "center",
 		justifyContent: "center",
-		paddingTop: 150,
+		paddingTop: "10%",
 	},
 	logo: {
 		width: 300,
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
 		marginTop: 40,
 	},
 	loginBack: {
-		marginTop: 30,
+		marginTop: "10%",
 		alignSelf: "center",
 		color: "#2775C9",
 		fontWeight: "bold",
@@ -81,36 +83,38 @@ const Login = ({ navigation }) => {
 	return (
 		<KeyboardAvoidingView
 			style={styles.loginpage}
-			behavior={Platform.OS == "ios" ? "padding" : "height"}
+			behavior={Platform.OS == "ios" ? "padding" : null}
 		>
-			<Image source={require("./logo.png")} style={styles.logo} />
-			<TextInput
-				style={styles.inputSpace}
-				placeholder="Username or Email Address"
-				onChangeText={(text) => setEmail(text)}
-				value={email}
-			/>
-			<TextInput
-				style={styles.inputSpace}
-				placeholder="Password"
-				secureTextEntry
-				onChangeText={(text) => setPassword(text)}
-				value={password}
-			/>
-			<TouchableOpacity>
-				<Text style={styles.forgetP}>Forgot Password?</Text>
-			</TouchableOpacity>
-			<View style={styles.loginB}>
-				<Button
-					style={styles.loginButton}
-					text="LOGIN"
-					bgcolor="#FDB833"
-					handler={logIn}
+			<ScorllviewContext>
+				<Image source={require("./logo.png")} style={styles.logo} />
+				<TextInput
+					style={styles.inputSpace}
+					placeholder="Username or Email Address"
+					onChangeText={(text) => setEmail(text)}
+					value={email}
 				/>
-				<TouchableOpacity onPress={handleHome}>
-					<Text style={styles.loginBack}>BACK</Text>
+				<TextInput
+					style={styles.inputSpace}
+					placeholder="Password"
+					secureTextEntry
+					onChangeText={(text) => setPassword(text)}
+					value={password}
+				/>
+				<TouchableOpacity>
+					<Text style={styles.forgetP}>Forgot Password?</Text>
 				</TouchableOpacity>
-			</View>
+				<View style={styles.loginB}>
+					<Button
+						style={styles.loginButton}
+						text="LOGIN"
+						bgcolor="#FDB833"
+						handler={logIn}
+					/>
+					<TouchableOpacity onPress={handleHome}>
+						<Text style={styles.loginBack}>BACK</Text>
+					</TouchableOpacity>
+				</View>
+			</ScorllviewContext>
 		</KeyboardAvoidingView>
 	);
 };

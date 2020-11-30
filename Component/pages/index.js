@@ -14,3 +14,6 @@ export { default as Favourite } from "./Favorite";
 export { default as Notification } from "./Notification";
 export { default as messageUi } from "./MessageMain";
 export { default as ShDetail } from "./ShBusiness";
+
+export { default as MyDiscussion } from "./MyDiscussion";
+export { default as MyMarket } from "./MyMarket";

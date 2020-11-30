@@ -6,6 +6,8 @@ import {
 	ActivityIndicator,
 	Text,
 	Image,
+	TextInput,
+	Button,
 } from "react-native";
 
 import DiscussionHeading from "../../comps/DiscussionHeading";
@@ -13,6 +15,9 @@ import PostBodyD from "../../comps/PostBodyD";
 import Comment from "../../comps/Comment";
 import Header from "../../comps/Header";
 import { AuthContext } from "../..";
+import { getAllCommentByPost } from "../../../firebase/collection/readData";
+import { commentPost } from "../../../firebase/collection/writeData";
+import { db } from "../../../firebase/firebase";
 
 const styles = StyleSheet.create({
 	container: {
@@ -22,9 +27,8 @@ const styles = StyleSheet.create({
 		marginTop: "5%",
 	},
 	contentContainer: {
-		position: "absolute",
-		top: "14%",
-		maxHeight: "65%",
+		maxWidth: "100%",
+		marginTop: "30%",
 	},
 	row: {
 		flexDirection: "row",
@@ -40,12 +44,22 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		top: 698,
 	},
+	inputSpace: {
+		marginBottom: 15,
+		width: "80%",
+		borderColor: "#000",
+		borderRadius: 5,
+		borderWidth: 1,
+		paddingVertical: 8,
+		paddingLeft: 5,
+	},
 });
 
 const OneDiscussion = ({ navigation, route }) => {
 	const [isReady, setReady] = useState(false);
 	const [detailPost, setDetail] = useState();
-
+	const [commentList, setCommentList] = useState([]);
+	const [comment, setComment] = useState();
 	const authContext = useContext(AuthContext);
 	const { postId } = route.params;
 
@@ -55,6 +69,42 @@ const OneDiscussion = ({ navigation, route }) => {
 		setDetail(p[0]);
 		setReady(true);
 	}, [setDetail]);
+
+	useEffect(() => {
+		setReady(false);
+		getAllCommentByPost(postId).then((data) => {
+			setCommentList(data);
+			setReady(true);
+		});
+	}, []);
+
+	const handleComment = async () => {
+		if (comment != "") {
+			await commentPost(postId, comment);
+		}
+	};
+
+	const commentArea = commentList.map((data, index) => (
+		<View key={index}>
+			<Text>
+				{data.createdBy}: {data.comment}
+			</Text>
+		</View>
+	));
+
+	db.collection("posts")
+		.doc(postId)
+		.collection("comment")
+		.orderBy("createdAt", "desc")
+		.limit(1)
+		.onSnapshot((snapshot) => {
+			let changes = snapshot.docChanges();
+			changes.forEach((change) => {
+				if (change.type == "modified") {
+					setCommentList([change.doc.data(), ...commentList]);
+				}
+			});
+		});
 
 	return isReady === false ? (
 		<View style={styles.container}>
@@ -73,13 +123,19 @@ const OneDiscussion = ({ navigation, route }) => {
 				}}
 			/>
 			<ScrollView style={styles.contentContainer}>
-				<View>
+				<View style={{ alignItems: "center" }}>
 					<DiscussionHeading txt1={detailPost.title} />
 					<PostBodyD txt1={detailPost.description} img={detailPost.images} />
-					<Comment />
-					<Comment followUp={require("../../public/follow_up.png")} />
-					<Comment followUp={require("../../public/follow_up.png")} />
-					<Comment followUp={require("../../public/follow_up.png")} />
+					<View style={{ width: "90%", flexDirection: "row" }}>
+						<TextInput
+							style={styles.inputSpace}
+							placeholder="Comment"
+							onChangeText={(text) => setComment(text)}
+							value={comment}
+						/>
+						<Button title="send" onPress={handleComment} />
+					</View>
+					{commentArea}
 				</View>
 			</ScrollView>
 		</View>

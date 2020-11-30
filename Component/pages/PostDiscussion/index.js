@@ -6,15 +6,11 @@ import {
 	TextInput,
 	Text,
 	ActivityIndicator,
-	Button,
-	KeyboardAvoidingView,
 	Alert,
 } from "react-native";
 
 // import DiscussionHeading from '../../comps/DiscussionHeading';
 import Header from "../../comps/Header";
-import UserTextInput from "../../comps/Inputs";
-import ContInput from "../../comps/ContInput";
 import { AuthContext } from "../..";
 
 import {
@@ -24,7 +20,6 @@ import {
 
 import * as ImagePicker from "expo-image-picker";
 import ImageInputList from "../../createPost/ImageInputList";
-import { getPostById } from "../../../firebase/collection/readData";
 import { db } from "../../../firebase/firebase";
 
 const styles = StyleSheet.create({
@@ -34,7 +29,6 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		marginTop: "10%",
 	},
-
 	icon: {
 		resizeMode: "contain",
 		maxWidth: 25,
@@ -42,27 +36,21 @@ const styles = StyleSheet.create({
 		margin: 10,
 	},
 	midcont: {
-		marginTop: 20,
-		position: "absolute",
-		top: "10%",
-		alignItems: "center",
+		marginTop: "20%",
+		padding: 20,
 	},
 	continput: {
 		marginTop: 80,
 	},
 	userinput: {
-		marginBottom: 40,
-	},
-	Navi: {
-		position: "absolute",
-		top: 698,
+		maxHeight: "100%",
 	},
 	titleSpace: {
 		marginTop: 12,
 		borderWidth: 1,
 		borderColor: "#000",
 		borderRadius: 10,
-		minWidth: "80%",
+		minWidth: "100%",
 		fontSize: 15,
 		padding: 6,
 	},
@@ -72,9 +60,11 @@ const styles = StyleSheet.create({
 		borderColor: "#000",
 		borderRadius: 10,
 		minWidth: "80%",
-		height: "80%",
+		minHeight: "30%",
+		maxHeight: "40%",
 		fontSize: 15,
-		padding: 6,
+		padding: 10,
+		marginBottom: 10,
 	},
 });
 
@@ -124,7 +114,10 @@ const PostDiscussion = ({ route, navigation }) => {
 						description: postDescription,
 						postType: type,
 						images: imageList,
-						current: { id: authContext.user, id: authContext.user.userName },
+						CreatedBy: {
+							id: authContext.user.id,
+							name: authContext.user.userName,
+						},
 						price,
 				  }
 				: {
@@ -132,7 +125,10 @@ const PostDiscussion = ({ route, navigation }) => {
 						description: postDescription,
 						postType: type,
 						images: imageList,
-						current: { id: authContext.user, id: authContext.user.userName },
+						CreatedBy: {
+							id: authContext.user.id,
+							name: authContext.user.userName,
+						},
 				  };
 			await createPost(data);
 			navigation.goBack();
@@ -149,7 +145,6 @@ const PostDiscussion = ({ route, navigation }) => {
 			let changes = snapshot.docChanges();
 			changes.forEach((change) => {
 				if (change.type == "modified") {
-					//console.log(change.doc.data());
 					authContext.setPosts([change.doc.data(), ...authContext.posts]);
 				}
 			});
@@ -170,7 +165,7 @@ const PostDiscussion = ({ route, navigation }) => {
 				fuc1={handleGoBack}
 				fuc2={handlecreatePost}
 			/>
-			<View style={styles.midcont}>
+			<ScrollView style={styles.midcont}>
 				<View style={styles.userinput}>
 					<TextInput
 						style={styles.titleSpace}
@@ -194,14 +189,15 @@ const PostDiscussion = ({ route, navigation }) => {
 							value={price}
 						/>
 					)}
+					<View style={{ marginTop: 10 }}>
+						<ImageInputList
+							imageUris={imageUris}
+							onAddImage={handleAdd}
+							onRemoveImage={handleRemove}
+						/>
+					</View>
 				</View>
-
-				<ImageInputList
-					imageUris={imageUris}
-					onAddImage={handleAdd}
-					onRemoveImage={handleRemove}
-				/>
-			</View>
+			</ScrollView>
 		</View>
 	);
 };

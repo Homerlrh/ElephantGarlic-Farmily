@@ -26,6 +26,8 @@ import {
 	Notification,
 	messageUi,
 	ShDetail,
+	MyDiscussion,
+	MyMarket,
 } from "../pages";
 
 const Tab = createBottomTabNavigator();
@@ -129,37 +131,35 @@ const postNavigator = () => {
 	);
 };
 
-const postNavigator2 = () => {
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false }}>
-			<Stack.Screen
-				name="forum"
-				component={Forum}
-				options={{ title: "Forum" }}
-			/>
-			<Stack.Screen
-				name="marketPost"
-				component={MarketPost}
-				options={{ title: "Market" }}
-			/>
-			<Stack.Screen
-				name="marketDetail"
-				component={marketDetail}
-				options={{ title: "Market" }}
-			/>
-			<Stack.Screen
-				name="createPost"
-				component={CreatePost}
-				options={{ title: "create" }}
-			/>
-			<Stack.Screen
-				name="slaughter"
-				component={AllShHouse}
-				options={{ title: "Slaughterhouse" }}
-			/>
-		</Stack.Navigator>
-	);
-};
+const ProfileNavifator = () => (
+	<Stack.Navigator screenOptions={{ headerShown: false }}>
+		<Stack.Screen
+			name="ProfileScreen"
+			component={Profile}
+			options={{ title: "User Profile" }}
+		/>
+		<Stack.Screen
+			name="MyDisc"
+			component={MyDiscussion}
+			options={{ title: "All Discussion post" }}
+		/>
+		<Stack.Screen
+			name="MyMarket"
+			component={MyMarket}
+			options={{ title: "All Market post" }}
+		/>
+		<Stack.Screen
+			name="createPost"
+			component={CreatePost}
+			options={{ title: "create" }}
+		/>
+		<Stack.Screen
+			name="discussionDetail"
+			component={postDetail}
+			options={{ title: "Disscusion" }}
+		/>
+	</Stack.Navigator>
+);
 
 const ChatNavigator = () => {
 	return (
@@ -214,7 +214,7 @@ const AppNavigator = () => {
 
 			<Tab.Screen
 				name="Profile"
-				component={Profile}
+				component={ProfileNavifator}
 				options={{
 					tabBarIcon: () => (
 						<Image

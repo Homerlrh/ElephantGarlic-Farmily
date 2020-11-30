@@ -120,7 +120,6 @@ const styles = StyleSheet.create({
 		color: "#000000",
 		fontWeight: "600",
 		fontSize: 16,
-		fontFamily: "Roboto",
 		padding: 5,
 	},
 

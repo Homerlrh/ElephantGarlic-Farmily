@@ -28,7 +28,7 @@ const Button = ({ bgcolor, text, handler, width }) => {
 	return (
 		<TouchableOpacity onPress={handler} style={{ width: width }}>
 			<View
-				style={[styles.container, pressB, position]}
+				style={[styles.container]}
 				backgroundColor={bgcolor}
 				onTouchStart={() => {
 					setPress(0);

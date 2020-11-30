@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Image, ScrollView, StyleSheet, Text } from "react-native";
+import {
+	View,
+	Image,
+	ScrollView,
+	StyleSheet,
+	Text,
+	SafeAreaView,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ForumPost from "../../comps/ForumPost";
 import LogoHeader from "../../comps/LogoHeader";
@@ -10,6 +17,7 @@ import Button from "../../comps/Button";
 import { getAllPost } from "../../../firebase/collection/readData";
 
 import { AuthContext } from "../../index";
+import ScorllviewContext from "../../Context/ScorllviewContext";
 const filterPost = {
 	Discussion: (post) => post.postType === "discussion",
 	Market: (post) => post.postType === "market",
@@ -101,42 +109,44 @@ export default function UserMain({ navigation }) {
 		});
 
 	return isReady === false ? null : (
-		<View style={styles.container}>
-			<LogoHeader logo={require("../../public/logo_h.png")} />
-			<View style={styles.body}>
-				<View style={styles.filterGroup}>{filterButton}</View>
-				<ScrollView
-					style={
-						filter == "Discussion" ? styles.allPostBody : styles.allPostBody2
-					}
-				>
-					{postGroup}
-				</ScrollView>
+		<ScorllviewContext>
+			<View>
+				<LogoHeader logo={require("../../public/logo_h.png")} />
+				<View style={styles.body}>
+					<View style={styles.filterGroup}>{filterButton}</View>
+					<ScrollView
+						style={
+							filter == "Discussion" ? styles.allPostBody : styles.allPostBody2
+						}
+					>
+						{postGroup}
+					</ScrollView>
 
-				<Button
-					text="MORE"
-					bgcolor={filter == "Discussion" ? "#FDB833" : "#00AC64"}
-					width="70%"
-					handler={filter == "Discussion" ? handleDiss : handleMark}
-				/>
-				<View
-					style={{
-						minWidth: "100%",
-						alignItems: "center",
-						flexDirection: "row",
-					}}
-				>
-					<TouchableOpacity onPress={handleSh}>
-						<Underlined text="Slaughterhouses" />
-					</TouchableOpacity>
-
-					<Image
-						style={styles.icon}
-						source={require("../../public/forward.png")}
+					<Button
+						text="MORE"
+						bgcolor={filter == "Discussion" ? "#FDB833" : "#00AC64"}
+						width="70%"
+						handler={filter == "Discussion" ? handleDiss : handleMark}
 					/>
+					<View
+						style={{
+							minWidth: "100%",
+							alignItems: "center",
+							flexDirection: "row",
+						}}
+					>
+						<TouchableOpacity onPress={handleSh}>
+							<Underlined text="Slaughterhouses" />
+						</TouchableOpacity>
+
+						<Image
+							style={styles.icon}
+							source={require("../../public/forward.png")}
+						/>
+					</View>
 				</View>
 			</View>
-		</View>
+		</ScorllviewContext>
 	);
 }
 
@@ -157,11 +167,8 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	body: {
-		position: "absolute",
-		top: "20%",
+		paddingTop: "30%",
 		alignItems: "center",
-
-		// borderWidth: 1,
 	},
 	filterGroup: {
 		minWidth: "100%",

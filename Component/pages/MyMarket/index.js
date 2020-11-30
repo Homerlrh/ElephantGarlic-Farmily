@@ -8,45 +8,21 @@ import {
 	ScrollView,
 	TouchableOpacity,
 } from "react-native";
-
-import TradePost from "../../comps/TradePost";
-import Header from "../../comps/Header";
 import { AuthContext } from "../..";
+import { getPostByUserId } from "../../../firebase/collection/readData";
+import Header from "../../comps/Header";
+import TradePost from "../../comps/TradePost";
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-		marginTop: "10%",
-	},
-	body: {
-		marginTop: "30%",
-	},
-	row: {
-		flexDirection: "row",
-		justifyContent: "center",
-	},
-	icon: {
-		resizeMode: "contain",
-		maxWidth: 25,
-		maxHeight: 25,
-		margin: 10,
-	},
-	Navi: {
-		position: "absolute",
-		top: 698,
-	},
-});
-
-const MpBoard = ({ navigation }) => {
-	const [dpost, setDpost] = useState([]);
+export default function MyMarket({ navigation }) {
 	const authContext = useContext(AuthContext);
+	const [dpost, setDpost] = useState([]);
+
 	useEffect(() => {
-		const discussion = authContext.posts.filter(
-			(post) => post.postType === "market"
-		);
-		setDpost(discussion);
+		(async () => {
+			const userPosts = await getPostByUserId(authContext.user.id);
+			const p = userPosts.filter((post) => post.postType === "market");
+			setDpost(p);
+		})();
 	}, [authContext.posts]);
 
 	const list = dpost.map((post) => (
@@ -67,12 +43,15 @@ const MpBoard = ({ navigation }) => {
 	return (
 		<View style={styles.container}>
 			<Header
-				text="Market"
+				text="Created Discussion"
 				iconRight={require("../../public/pencil.png")}
-				iconLeft={require("../../public/filter.png")}
+				iconLeft={require("../../public/back.png")}
 				bottomColor="#00AC64"
+				fuc1={() => {
+					navigation.goBack();
+				}}
 				fuc2={() => {
-					navigation.push("createPost", { type: "market" });
+					navigation.push("createPost", { type: "discussion" });
 				}}
 			/>
 			<View style={styles.body}>
@@ -101,6 +80,29 @@ const MpBoard = ({ navigation }) => {
 			</View>
 		</View>
 	);
-};
+}
 
-export default MpBoard;
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: "center",
+		marginTop: "10%",
+	},
+	body: {
+		marginTop: "30%",
+	},
+	row: {
+		flexDirection: "row",
+		justifyContent: "center",
+	},
+	icon: {
+		resizeMode: "contain",
+		maxWidth: 25,
+		maxHeight: 25,
+		margin: 10,
+	},
+	Forum_Navi: {
+		position: "absolute",
+		top: 698,
+	},
+});
