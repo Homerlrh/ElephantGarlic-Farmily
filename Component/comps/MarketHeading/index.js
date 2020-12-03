@@ -62,7 +62,9 @@ const MarketHeading = ({ txt1, txt2, txt3, txt4, txt5, txt6, imagePath }) => {
 				<View style={styles.user}>
 					<Image
 						style={styles.avatar}
-						source={imagePath ? imagePath : require("../../public/a2.png")}
+						source={
+							imagePath ? { uri: imagePath } : require("../../public/a2.png")
+						}
 					/>
 					<Text>{txt3}</Text>
 				</View>

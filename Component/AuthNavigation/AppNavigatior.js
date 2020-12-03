@@ -1,18 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-
 import { Image } from "react-native";
-
-import {
-	Home,
-	DetailPost,
-	AllPost,
-	AccountPage,
-	//CreatePost,
-	ChatScreen,
-	DetailChat,
-} from "../index";
 import {
 	Usermain,
 	Forum,
@@ -28,61 +17,11 @@ import {
 	ShDetail,
 	MyDiscussion,
 	MyMarket,
+	DetailMessage,
 } from "../pages";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-
-const CreatePostNavigator = () => {
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="CreatePost"
-				component={CreatePost}
-				options={{ title: "Create Post" }}
-			/>
-			<Stack.Screen
-				name="DetailPost"
-				component={DetailPost}
-				options={{ title: "Detail Post" }}
-			/>
-		</Stack.Navigator>
-	);
-};
-
-const PostNavigator = () => {
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="AllPost"
-				component={AllPost}
-				options={{ title: "All Post" }}
-			/>
-			<Stack.Screen
-				name="DetailPost"
-				component={DetailPost}
-				options={{ title: "Detail Post" }}
-			/>
-		</Stack.Navigator>
-	);
-};
-
-// const AccountNavigator = ()=>{
-// 	return(
-// 		<Stack.Navigator>
-// 		<Stack.Screen
-// 			name="AllPost"
-// 			component={AllPost}
-// 			options={{ title: "All Post" }}
-// 		/>
-// 		<Stack.Screen
-// 			name="DetailPost"
-// 			component={DetailPost}
-// 			options={{ title: "Detail Post" }}
-// 		/>
-// 	</Stack.Navigator>
-// 	)
-// }
 
 const postNavigator = () => {
 	return (
@@ -158,8 +97,35 @@ const ProfileNavifator = () => (
 			component={postDetail}
 			options={{ title: "Disscusion" }}
 		/>
+		<Stack.Screen
+			name="marketDetail"
+			component={marketDetail}
+			options={{ title: "Market" }}
+		/>
 	</Stack.Navigator>
 );
+
+const FavouriteNavigator = () => {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen
+				name="FavouriteHome"
+				component={Favourite}
+				options={{ title: "Favourite Screen" }}
+			/>
+			<Stack.Screen
+				name="discussionDetail"
+				component={postDetail}
+				options={{ title: "Disscusion" }}
+			/>
+			<Stack.Screen
+				name="marketDetail"
+				component={marketDetail}
+				options={{ title: "Market" }}
+			/>
+		</Stack.Navigator>
+	);
+};
 
 const ChatNavigator = () => {
 	return (
@@ -171,7 +137,7 @@ const ChatNavigator = () => {
 			/>
 			<Stack.Screen
 				name="DetailChat"
-				component={DetailChat}
+				component={DetailMessage}
 				options={{ title: "Detail Chat" }}
 			/>
 		</Stack.Navigator>
@@ -184,7 +150,7 @@ const AppNavigator = () => {
 			tabBarOptions={{
 				showLabel: false,
 				tabStyle: { alignItems: "center", justifyContent: "center" },
-				inactiveTintColor: "lightgrey",
+				inactiveTintColor: "black",
 				activeTintColor: "blue",
 			}}
 		>
@@ -192,9 +158,10 @@ const AppNavigator = () => {
 				name="Home"
 				component={postNavigator}
 				options={{
-					tabBarIcon: () => (
+					tabBarIcon: ({ color }) => (
 						<Image
 							source={require("../../Component/comps/Navigation/home.png")}
+							style={{ tintColor: color }}
 						/>
 					),
 				}}
@@ -204,9 +171,10 @@ const AppNavigator = () => {
 				name="CreatePost"
 				component={Notification}
 				options={{
-					tabBarIcon: () => (
+					tabBarIcon: ({ color }) => (
 						<Image
 							source={require("../../Component/comps/Navigation/notification.png")}
+							style={{ tintColor: color }}
 						/>
 					),
 				}}
@@ -216,9 +184,10 @@ const AppNavigator = () => {
 				name="Profile"
 				component={ProfileNavifator}
 				options={{
-					tabBarIcon: () => (
+					tabBarIcon: ({ color }) => (
 						<Image
 							source={require("../../Component/comps/Navigation/profile.png")}
+							style={{ tintColor: color }}
 						/>
 					),
 				}}
@@ -226,11 +195,12 @@ const AppNavigator = () => {
 
 			<Tab.Screen
 				name="Favourite"
-				component={Favourite}
+				component={FavouriteNavigator}
 				options={{
-					tabBarIcon: () => (
+					tabBarIcon: ({ color }) => (
 						<Image
 							source={require("../../Component/comps/Navigation/favourite.png")}
+							style={{ tintColor: color }}
 						/>
 					),
 				}}
@@ -240,9 +210,10 @@ const AppNavigator = () => {
 				name="Chat"
 				component={ChatNavigator}
 				options={{
-					tabBarIcon: () => (
+					tabBarIcon: ({ color }) => (
 						<Image
 							source={require("../../Component/comps/Navigation/chat.png")}
+							style={{ tintColor: color }}
 						/>
 					),
 				}}

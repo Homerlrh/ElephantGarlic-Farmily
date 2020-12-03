@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 
 export const scrollContext = createContext();
 export default function ScorllviewContext({ children }) {

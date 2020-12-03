@@ -1,8 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, StyleSheet, Image, TextInput } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Image,
+	TextInput,
+	FlatList,
+} from "react-native";
 
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { AuthContext } from "../..";
+import { getLatestPost } from "../../../firebase/collection/readData";
 
 import ForumPost from "../../comps/ForumPost";
 import Header from "../../comps/Header";
@@ -35,6 +43,7 @@ const styles = StyleSheet.create({
 const ForumBoard = ({ navigation }) => {
 	const [dpost, setDpost] = useState([]);
 
+	const [isRefresh, setRefresh] = useState(false);
 	const authContext = useContext(AuthContext);
 	useEffect(() => {
 		const discussion = authContext.posts.filter(
@@ -43,20 +52,15 @@ const ForumBoard = ({ navigation }) => {
 		setDpost(discussion);
 	}, [authContext.posts]);
 
-	const list = dpost.map((post) => (
-		<TouchableOpacity
-			key={post.postId}
-			onPress={() => {
-				navigation.navigate("discussionDetail", { postId: post.postId });
-			}}
-		>
-			<ForumPost
-				txt1={post.title}
-				txt2={post.description}
-				imagePath={post.images[0]}
-			/>
-		</TouchableOpacity>
-	));
+	const handleRefresh = async () => {
+		setRefresh(true);
+		const p = await getLatestPost(dpost[0].createdAt);
+		if (p.length > 0) {
+			authContext.setPosts([...p, ...authContext.posts]);
+		}
+		setRefresh(false);
+	};
+
 	return (
 		<View style={styles.container}>
 			<Header
@@ -81,16 +85,37 @@ const ForumBoard = ({ navigation }) => {
 							borderRadius: 5,
 							textAlign: "center",
 						}}
-					>
-						For testing, will fix later
-					</TextInput>
+						placeholder="For testing, will fix later"
+					/>
 					<Image
 						source={require("../../public/search.png")}
 						style={styles.icon}
 					></Image>
 				</View>
-				{/* this input is for testing pages only -- end */}
-				<ScrollView>{list}</ScrollView>
+				<FlatList
+					data={dpost}
+					extraData={dpost}
+					keyExtractor={(post) => post.postId}
+					renderItem={(post) => (
+						<TouchableOpacity
+							onPress={() => {
+								navigation.navigate("discussionDetail", {
+									postId: post.item.postId,
+								});
+							}}
+						>
+							<ForumPost
+								txt1={post.item.title}
+								txt2={post.item.description}
+								imagePath={post.item.images[0]}
+							/>
+						</TouchableOpacity>
+					)}
+					refreshing={isRefresh}
+					onRefresh={() => {
+						handleRefresh();
+					}}
+				/>
 			</View>
 		</View>
 	);

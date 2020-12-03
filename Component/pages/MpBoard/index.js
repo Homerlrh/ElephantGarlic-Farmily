@@ -1,17 +1,98 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
 	View,
-	Text,
 	StyleSheet,
 	Image,
 	TextInput,
-	ScrollView,
 	TouchableOpacity,
+	FlatList,
 } from "react-native";
 
 import TradePost from "../../comps/TradePost";
 import Header from "../../comps/Header";
 import { AuthContext } from "../..";
+import { getLatestPost } from "../../../firebase/collection/readData";
+
+const MpBoard = ({ navigation }) => {
+	const [dpost, setDpost] = useState([]);
+	const [isRefresh, setRefresh] = useState(false);
+
+	const authContext = useContext(AuthContext);
+	useEffect(() => {
+		const discussion = authContext.posts.filter(
+			(post) => post.postType === "market"
+		);
+		setDpost(discussion);
+	}, [authContext.posts]);
+
+	const handleRefresh = async () => {
+		setRefresh(true);
+		const p = await getLatestPost(dpost[0].createdAt);
+		if (p.length > 0) {
+			authContext.setPosts([...p, ...authContext.posts]);
+		}
+		setRefresh(false);
+	};
+
+	return (
+		<View style={styles.container}>
+			<Header
+				text="Market"
+				iconRight={require("../../public/pencil.png")}
+				iconLeft={require("../../public/filter.png")}
+				bottomColor="#00AC64"
+				fuc2={() => {
+					navigation.push("createPost", { type: "market" });
+				}}
+			/>
+			<View style={styles.body}>
+				<View style={styles.row}>
+					<TextInput
+						style={{
+							height: 40,
+							width: "60%",
+							borderColor: "gray",
+							borderWidth: 1,
+							marginBottom: "6%",
+							borderRadius: 5,
+							textAlign: "center",
+						}}
+						placeholder="For testing, will fix later"
+					/>
+
+					<Image
+						source={require("../../public/search.png")}
+						style={styles.icon}
+					/>
+				</View>
+				<FlatList
+					data={dpost}
+					extraData={dpost}
+					keyExtractor={(post) => post.postId}
+					renderItem={(post) => (
+						<TouchableOpacity
+							onPress={() => {
+								navigation.navigate("marketDetail", {
+									postId: post.item.postId,
+								});
+							}}
+						>
+							<TradePost
+								txt1={post.item.title}
+								txt3={post.item.description}
+								imagePath={post.item.images[0]}
+							/>
+						</TouchableOpacity>
+					)}
+					refreshing={isRefresh}
+					onRefresh={() => {
+						handleRefresh();
+					}}
+				/>
+			</View>
+		</View>
+	);
+};
 
 const styles = StyleSheet.create({
 	container: {
@@ -38,69 +119,5 @@ const styles = StyleSheet.create({
 		top: 698,
 	},
 });
-
-const MpBoard = ({ navigation }) => {
-	const [dpost, setDpost] = useState([]);
-	const authContext = useContext(AuthContext);
-	useEffect(() => {
-		const discussion = authContext.posts.filter(
-			(post) => post.postType === "market"
-		);
-		setDpost(discussion);
-	}, [authContext.posts]);
-
-	const list = dpost.map((post) => (
-		<TouchableOpacity
-			key={post.postId}
-			onPress={() => {
-				navigation.navigate("marketDetail", { postId: post.postId });
-			}}
-		>
-			<TradePost
-				txt1={post.title}
-				txt3={post.description}
-				imagePath={post.images[0]}
-			/>
-		</TouchableOpacity>
-	));
-
-	return (
-		<View style={styles.container}>
-			<Header
-				text="Market"
-				iconRight={require("../../public/pencil.png")}
-				iconLeft={require("../../public/filter.png")}
-				bottomColor="#00AC64"
-				fuc2={() => {
-					navigation.push("createPost", { type: "market" });
-				}}
-			/>
-			<View style={styles.body}>
-				{/* this input is for testing pages only -- start */}
-				<View style={styles.row}>
-					<TextInput
-						style={{
-							height: 40,
-							width: "60%",
-							borderColor: "gray",
-							borderWidth: 1,
-							marginBottom: "6%",
-							borderRadius: 5,
-							textAlign: "center",
-						}}
-					>
-						For testing, will fix later
-					</TextInput>
-					<Image
-						source={require("../../public/search.png")}
-						style={styles.icon}
-					></Image>
-				</View>
-				{/* this input is for testing pages only -- end */}
-				<ScrollView>{list}</ScrollView>
-			</View>
-		</View>
-	);
-};
 
 export default MpBoard;

@@ -55,7 +55,6 @@ export default function MyDiscussion({ navigation }) {
 				}}
 			/>
 			<View style={styles.body}>
-				{/* this input is for testing pages only -- start */}
 				<View style={styles.row}>
 					<TextInput
 						style={{
@@ -67,15 +66,13 @@ export default function MyDiscussion({ navigation }) {
 							borderRadius: 5,
 							textAlign: "center",
 						}}
-					>
-						For testing, will fix later
-					</TextInput>
+						placeholder="For testing, will fix later"
+					/>
 					<Image
 						source={require("../../public/search.png")}
 						style={styles.icon}
 					></Image>
 				</View>
-				{/* this input is for testing pages only -- end */}
 				<ScrollView>{list}</ScrollView>
 			</View>
 		</View>

@@ -160,6 +160,25 @@ async function getAllPost() {
 }
 
 /**
+ * get Latest Post by last post time
+ * @date 2020-12-03
+ * @param {any} time
+ * @returns {any}
+ */
+async function getLatestPost(time) {
+	const snapshot = await db
+		.collection("posts")
+		.where("createdAt", ">", time)
+		.orderBy("createdAt", "desc")
+		.get();
+	let array = [];
+	snapshot.forEach(async (x) => {
+		array = [...array, x.data()];
+	});
+	return array;
+}
+
+/**
  * get post by post id, get the detail post
  * @date 2020-11-10
  * @param {string} id
@@ -181,9 +200,9 @@ async function getPostById(id) {
  * @returns {array of object}
  */
 async function getPostByUserId(id) {
-	const snapshot = await Posts.where("createdBy.id", "==", id).get();
+	const snapshot = await Posts.where("CreatedBy.id", "==", id).get();
 	let array = [];
-	snapshot.forEach(async (x) => {
+	snapshot.forEach((x) => {
 		array = [...array, x.data()];
 	});
 	return array;
@@ -228,6 +247,26 @@ async function getChatRoomById(id) {
 
 /**
  * get chat from a chat room
+ * @date 2020-11-10
+ * @param {string} id chat room id
+ * @returns {object}
+ */
+async function getChatByRoomId(id) {
+	return Chats.doc(id)
+		.collection("message")
+		.orderBy("createdAt", "asc")
+		.get()
+		.then((snapShots) => {
+			let c = [];
+			snapShots.forEach((snapshot) => {
+				c = [...c, snapshot.data()];
+			});
+			return c;
+		});
+}
+
+/**
+ * get latest chat from a chat room
  * @date 2020-11-10
  * @param {string} id chat room id
  * @returns {object}
@@ -292,6 +331,24 @@ async function chat() {
 	});
 }
 
+/**
+ * get user's favourite post
+ * @date 2020-11-30
+ * @param {string} id
+ * @returns {array}
+ */
+export async function getUserFavourite(id) {
+	const snapshot = await Users.doc(id)
+		.collection("favourite")
+		.orderBy("createdAt", "desc")
+		.get();
+	let array = [];
+	snapshot.forEach(async (x) => {
+		array = [...array, x.data()];
+	});
+	return array;
+}
+
 export {
 	getUseWithUID,
 	getUserWithEmail,
@@ -305,4 +362,7 @@ export {
 	getAllCommentByPost,
 	changePassword,
 	chat,
+	getChatByRoomId,
+	getLatestChatByRoomId,
+	getLatestPost,
 };

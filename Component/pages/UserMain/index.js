@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	Text,
 	SafeAreaView,
+	FlatList,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ForumPost from "../../comps/ForumPost";
@@ -15,7 +16,6 @@ import Underlined from "../../comps/Underlined";
 import FilterButton from "../../comps/FilterButton";
 import Button from "../../comps/Button";
 import { getAllPost } from "../../../firebase/collection/readData";
-
 import { AuthContext } from "../../index";
 import ScorllviewContext from "../../Context/ScorllviewContext";
 const filterPost = {
@@ -26,10 +26,7 @@ const filterPost = {
 const postType = Object.keys(filterPost);
 
 export default function UserMain({ navigation }) {
-	//no use for now
 	const [isReady, setReady] = useState(false);
-
-	// initial state is Discussion
 	const [filter, setFilter] = useState("Discussion");
 	const [currentSelection, setCurrentSelection] = useState("Discussion");
 

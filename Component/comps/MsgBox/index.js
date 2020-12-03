@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	avatar: {
-		width: 40,
 		height: 40,
+		width: 50,
 		marginRight: 20,
 	},
 
@@ -40,7 +40,9 @@ const MsgBox = ({ txt1, txt2, imagePath }) => {
 			<View>
 				<Image
 					style={styles.avatar}
-					source={imagePath ? imagePath : require("../../public/a1.png")}
+					source={
+						imagePath ? { uri: imagePath } : require("../../public/a1.png")
+					}
 				/>
 			</View>
 			<View>

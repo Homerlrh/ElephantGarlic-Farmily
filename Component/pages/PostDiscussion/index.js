@@ -21,6 +21,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import ImageInputList from "../../createPost/ImageInputList";
 import { db } from "../../../firebase/firebase";
+import { getPostById } from "../../../firebase/collection/readData";
 
 const styles = StyleSheet.create({
 	container: {
@@ -138,17 +139,17 @@ const PostDiscussion = ({ route, navigation }) => {
 		}
 	};
 
-	db.collection("posts")
-		.orderBy("createdAt", "desc")
-		.limit(1)
-		.onSnapshot((snapshot) => {
-			let changes = snapshot.docChanges();
-			changes.forEach((change) => {
-				if (change.type == "modified") {
-					authContext.setPosts([change.doc.data(), ...authContext.posts]);
-				}
-			});
-		});
+	// db.collection("posts")
+	// 	.orderBy("createdAt", "desc")
+	// 	.limit(1)
+	// 	.onSnapshot((snapshot) => {
+	// 		let changes = snapshot.docChanges();
+	// 		changes.forEach((change) => {
+	// 			if (change.type == "modified") {
+	// 				authContext.setPosts([change.doc.data(), ...authContext.posts]);
+	// 			}
+	// 		});
+	// 	});
 
 	return isReady === false ? (
 		<View style={styles.container}>

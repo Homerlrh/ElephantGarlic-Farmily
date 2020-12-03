@@ -44,7 +44,6 @@ const Profile = ({ navigation }) => {
 						/>
 					</View>
 					<View style={styles.tabs}>
-						<MyTab text="View Profile" />
 						<MyTab
 							text="My discussion"
 							onpress={() => {
@@ -57,7 +56,6 @@ const Profile = ({ navigation }) => {
 								navigation.navigate("MyMarket");
 							}}
 						/>
-						<MyTab text="Settings" />
 						<MyTab text="Logout" onpress={handleLogOut} />
 					</View>
 				</View>

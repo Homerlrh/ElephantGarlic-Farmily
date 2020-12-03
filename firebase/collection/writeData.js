@@ -26,7 +26,8 @@ async function registerNewUser(email, password, confirmPassword, data) {
 			const currentTime = firebase.firestore.FieldValue.serverTimestamp();
 			data.createdTime = currentTime;
 			data.id = uid;
-			data.chat = [];
+			data.chats = [];
+			data.favourite = [];
 			return Users.doc(uid)
 				.set(data)
 				.then(async () => {
@@ -118,7 +119,7 @@ async function createChatRoom(sendUser) {
 	};
 	return Chats.add(userGroup).then((doc) => {
 		Chats.doc(doc.id).update({ roomId: doc.id });
-		Users.doc(authContext.user.id).update({
+		Users.doc(current.id).update({
 			chats: firebase.firestore.FieldValue.arrayUnion(doc.id),
 		});
 		Users.doc(sendUser).update({
@@ -221,6 +222,20 @@ async function createSHBooking(businessName, date, time) {
 	return true;
 }
 
+/**
+ * Allow User to favouritePost
+ * @date 2020-11-30
+ * @param {any} userId
+ * @param {any} post
+ * @returns {any}
+ */
+async function favouritePost(userId, post) {
+	Users.doc(userId).update({
+		favourite: firebase.firestore.FieldValue.arrayUnion(post.postId),
+	});
+	Users.doc(userId).collection("favourite").doc(post.postId).set(post);
+}
+
 export {
 	registerNewUser,
 	createPost,
@@ -231,4 +246,5 @@ export {
 	createSlaughterHouse,
 	createBooking,
 	createSHBooking,
+	favouritePost,
 };

@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-const DiscussionHeading = ({ txt1, txt2, txt3, txt4, txt5 }) => {
+const DiscussionHeading = ({ txt1, txt2, txt3, txt4, txt5, avatar }) => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.inner1}>
@@ -49,7 +49,7 @@ const DiscussionHeading = ({ txt1, txt2, txt3, txt4, txt5 }) => {
 				<View style={styles.inner}>
 					<Image
 						style={styles.avatar}
-						source={require("../../public/a5.png")}
+						source={avatar ? { uri: avatar } : require("../../public/a5.png")}
 					/>
 					<Text>{txt2}</Text>
 				</View>

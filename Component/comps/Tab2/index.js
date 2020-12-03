@@ -1,9 +1,10 @@
 // import React from "react";
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import PostBodyD from "../../comps/PostBodyD";
+import ForumPost from "../ForumPost";
+import TradePost from "../TradePost";
 
-const MyTab2 = ({ iconExpand, text, dropdown }) => {
+const MyTab2 = ({ iconExpand, text, dropdown, post, navigation }) => {
 	const [isdrop, setDrop] = useState(false);
 	const [bordercolor, setBdColor] = useState("#DADADA");
 	const bcolor = { borderColor: bordercolor ? bordercolor : "#DADADA" };
@@ -12,6 +13,40 @@ const MyTab2 = ({ iconExpand, text, dropdown }) => {
 	useEffect(() => {
 		setDrop(dropdown);
 	}, [dropdown]);
+
+	const list = post
+		? post.map((post) =>
+				post.postType == "discussion" ? (
+					<TouchableOpacity
+						key={post.postId}
+						onPress={() => {
+							navigation.navigate("discussionDetail", { postId: post.postId });
+						}}
+					>
+						<View>
+							<ForumPost
+								txt1={post.title}
+								txt2={post.description}
+								imagePath={post.images[0]}
+							/>
+						</View>
+					</TouchableOpacity>
+				) : (
+					<TouchableOpacity
+						key={post.postId}
+						onPress={() => {
+							navigation.navigate("marketDetail", { postId: post.postId });
+						}}
+					>
+						<TradePost
+							txt1={post.title}
+							txt3={post.description}
+							imagePath={post.images[0]}
+						/>
+					</TouchableOpacity>
+				)
+		  )
+		: null;
 
 	return (
 		<View
@@ -24,7 +59,6 @@ const MyTab2 = ({ iconExpand, text, dropdown }) => {
 			}}
 		>
 			<View style={styles.timeContainer}>
-				{/* <Text style={styles.title}>{text}</Text> */}
 				<TouchableOpacity
 					style={styles.hourCont}
 					onPress={() => {
@@ -32,11 +66,10 @@ const MyTab2 = ({ iconExpand, text, dropdown }) => {
 					}}
 				>
 					<Text style={styles.title}>{text}</Text>
-					{/* <Image source={iconExpand} style={styles.headIconE}/> */}
 				</TouchableOpacity>
 
 				<View isdrop={isdrop} style={[styles.hourContainer, hourCont]}>
-					<PostBodyD />
+					{list}
 				</View>
 			</View>
 		</View>
@@ -61,13 +94,13 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	hourContainer: {
+		width: "100%",
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
 		alignItems: "center",
 		resizeMode: "contain",
-		marginTop: "10%",
-		marginRight: "30%",
+		marginTop: 30,
 	},
 });
 MyTab2.defaultProps = {

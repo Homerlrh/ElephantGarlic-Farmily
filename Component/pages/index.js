@@ -17,3 +17,5 @@ export { default as ShDetail } from "./ShBusiness";
 
 export { default as MyDiscussion } from "./MyDiscussion";
 export { default as MyMarket } from "./MyMarket";
+
+export { default as DetailMessage } from "./DatailMessage";

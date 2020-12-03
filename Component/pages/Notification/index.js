@@ -41,11 +41,7 @@ const styles = StyleSheet.create({
 const Notification = () => {
 	return (
 		<View style={styles.container}>
-			<Header
-				text="Notification"
-				iconLeft={require("../../public/back.png")}
-				bottomColor="#C97064"
-			/>
+			<Header text="Notification" bottomColor="#C97064" />
 			<View style={styles.body}>
 				<Text style={styles.title}>Unread</Text>
 				<View style={styles.unreadmsg}>

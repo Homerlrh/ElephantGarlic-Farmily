@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 		marginTop: "5%",
 	},
 	body: {
-		paddingTop: "30%",
+		marginTop: "30%",
 	},
 	row: {
 		flexDirection: "row",

@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const ChatBalloon = () => {
+const ChatBubble = ({ msg, background }) => {
 	return (
-		<View style={styles.container}>
-			<Text style={styles.text}>
-				Hi! My name is Tig and I'm co-owner of SimplySeasonals in Abbottsford. I
-				saw your post, that you're selling your John Deere Tractor. I'm
-				interested in buying it from you!
-			</Text>
+		<View style={styles.container} backgroundColor={background}>
+			{background == "#DEDEDE" ? (
+				<Text style={(styles.text, { color: "#000" })}>{msg}</Text>
+			) : (
+				<Text style={styles.text}>{msg}</Text>
+			)}
 		</View>
 	);
 };
@@ -18,18 +18,24 @@ const styles = StyleSheet.create({
 		position: "relative",
 		backgroundColor: "#C97064",
 		display: "flex",
-		justifyContents: "flex-end",
-		width: "75%",
-		borderRadius: "20px",
-		padding: "18px",
-		margin: "10px",
+		justifyContent: "flex-end",
+		maxWidth: 200,
+		borderRadius: 20,
+		padding: 18,
+		margin: 10,
 	},
 
 	text: {
 		color: "#FFFFFF",
 		fontWeight: "300",
-		fontSize: "17px",
+		fontSize: 17,
 	},
 });
 
-export default ChatBalloon;
+ChatBubble.defaultProps = {
+	msg:
+		"Hi! My name is Tig! I saw your post, that you're selling your John Deere Tractor. I'm interested in buying it from you!",
+	background: "#C97064",
+};
+
+export default ChatBubble;

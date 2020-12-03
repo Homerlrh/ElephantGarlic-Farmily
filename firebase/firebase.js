@@ -21,7 +21,7 @@ const config2 = {
 };
 
 if (!firebase.apps.length) {
-	firebase.initializeApp(config);
+	firebase.initializeApp(config2);
 }
 
 const db = firebase.firestore();

@@ -5,18 +5,20 @@ import {
 	ScrollView,
 	ActivityIndicator,
 	Text,
-	Image,
 	TextInput,
 	Button,
+	Alert,
 } from "react-native";
 
 import DiscussionHeading from "../../comps/DiscussionHeading";
 import PostBodyD from "../../comps/PostBodyD";
-import Comment from "../../comps/Comment";
 import Header from "../../comps/Header";
 import { AuthContext } from "../..";
 import { getAllCommentByPost } from "../../../firebase/collection/readData";
-import { commentPost } from "../../../firebase/collection/writeData";
+import {
+	commentPost,
+	favouritePost,
+} from "../../../firebase/collection/writeData";
 import { db } from "../../../firebase/firebase";
 
 const styles = StyleSheet.create({
@@ -60,6 +62,7 @@ const OneDiscussion = ({ navigation, route }) => {
 	const [detailPost, setDetail] = useState();
 	const [commentList, setCommentList] = useState([]);
 	const [comment, setComment] = useState();
+	const [date, setDate] = useState();
 	const authContext = useContext(AuthContext);
 	const { postId } = route.params;
 
@@ -67,20 +70,40 @@ const OneDiscussion = ({ navigation, route }) => {
 		setReady(false);
 		const p = authContext.posts.filter((post) => post.postId === postId);
 		setDetail(p[0]);
+		const d = p[0].createdAt.toDate().toString().split(" ");
+		setDate(`${d[1]} ${d[2]} ${d[3]}`);
 		setReady(true);
-	}, [setDetail]);
+	}, []);
 
 	useEffect(() => {
-		setReady(false);
-		getAllCommentByPost(postId).then((data) => {
-			setCommentList(data);
-			setReady(true);
-		});
+		const unsubscribe = db
+			.collection("posts")
+			.doc(postId)
+			.collection("comment")
+			.orderBy("createdAt", "desc")
+			.onSnapshot((snapshot) => {
+				let list = [];
+				snapshot.docs.forEach((data) => {
+					list = [...list, data.data()];
+				});
+				setCommentList(list);
+			});
+		return () => unsubscribe();
 	}, []);
 
 	const handleComment = async () => {
 		if (comment != "") {
 			await commentPost(postId, comment);
+			setComment("");
+		}
+	};
+
+	const handleFavouritePost = async () => {
+		try {
+			await favouritePost(authContext.user.id, detailPost);
+			Alert.alert("Liked");
+		} catch (err) {
+			console.log(err);
 		}
 	};
 
@@ -91,20 +114,6 @@ const OneDiscussion = ({ navigation, route }) => {
 			</Text>
 		</View>
 	));
-
-	db.collection("posts")
-		.doc(postId)
-		.collection("comment")
-		.orderBy("createdAt", "desc")
-		.limit(1)
-		.onSnapshot((snapshot) => {
-			let changes = snapshot.docChanges();
-			changes.forEach((change) => {
-				if (change.type == "modified") {
-					setCommentList([change.doc.data(), ...commentList]);
-				}
-			});
-		});
 
 	return isReady === false ? (
 		<View style={styles.container}>
@@ -121,10 +130,16 @@ const OneDiscussion = ({ navigation, route }) => {
 				fuc1={() => {
 					navigation.goBack();
 				}}
+				fuc2={handleFavouritePost}
 			/>
 			<ScrollView style={styles.contentContainer}>
 				<View style={{ alignItems: "center" }}>
-					<DiscussionHeading txt1={detailPost.title} />
+					<DiscussionHeading
+						txt1={detailPost.title}
+						txt2={detailPost.CreatedBy.name}
+						txt3={date}
+						avatar={authContext.user.avatar}
+					/>
 					<PostBodyD txt1={detailPost.description} img={detailPost.images} />
 					<View style={{ width: "90%", flexDirection: "row" }}>
 						<TextInput
